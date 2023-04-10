@@ -91,7 +91,7 @@ DATABASES = {
 		'ENGINE': 'django.db.backends.mysql',
 		'NAME': 'tpc_backend',
 		'USER': 'root',
-		'PASSWORD': '8918473362',
+		'PASSWORD': env('PASSWORD'),
 		'HOST':'localhost',
 		'PORT':'8000',
 	}
