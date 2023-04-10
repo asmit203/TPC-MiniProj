@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "users",
     "profiles",
     "jobs",
+    
+    "rest_framework"
 ]
 
 MIDDLEWARE = [
@@ -89,16 +91,16 @@ WSGI_APPLICATION = "TPC_backend.wsgi.application"
 #     }
 # }
 
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'tpc_backend',
-		'USER': 'root',
-		'PASSWORD': env('PASSWORD'),
-		'HOST':'localhost',
-		'PORT':'8000',
-	}
-}
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.mysql',
+# 		'NAME': 'tpc_backend',
+# 		'USER': 'root',
+# 		'PASSWORD': env('PASSWORD'),
+# 		'HOST':'localhost',
+# 		'PORT':'8000',
+# 	}
+# }
 
 
 # DATABASES = {
