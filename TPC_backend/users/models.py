@@ -14,3 +14,23 @@ class Student(models.Model):
     resume = models.FileField(upload_to='resume/')
     def __str__(self):
         return self.name
+    
+#alumni model
+class Alumni(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    password = models.CharField(max_length=100)
+    batch = models.CharField(max_length=100)
+    branch = models.CharField(max_length=100)
+    company = models.CharField(max_length=100)
+    designation = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+    
+#company model
+class Company(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    password = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
