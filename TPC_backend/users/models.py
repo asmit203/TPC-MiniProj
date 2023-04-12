@@ -59,10 +59,16 @@ class Company(models.Model):
     minQual = models.TextField()
     marksCriteria = models.TextField()
     salaryPackage = models.TextField()
-    mode_of_interview = models.TextField()
+    mode_of_interview = models.CharField(max_length=50,choices=(
+        ('Online_written','Online Written'),
+        ('Offline_written','Offline Written'),
+        ('Online_interview','Online Interview'),
+        ('Offine_interview','Offline Inteview'),
+    ))
     time_of_start_iitp = models.TextField()
     name = models.CharField(max_length=100)
     email = models.EmailField()
     password = models.CharField(max_length=100)
     def __str__(self):
         return self.name
+    
