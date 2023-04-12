@@ -1,7 +1,21 @@
 from django.db import models
 
 # Create your models here.
-
+class Credits(models.Model):
+    specialization = models.CharField(max_length=100)
+    batch = models.CharField(max_length=8)
+    credits1 = models.IntegerField()
+    credits2 = models.IntegerField()
+    credits3 = models.IntegerField()
+    credits4 = models.IntegerField()
+    credits5 = models.IntegerField()
+    credits6 = models.IntegerField()
+    credits7 = models.IntegerField()
+    credits8 = models.IntegerField()
+    class Meta:
+        unique_together = ('specialization', 'batch')
+    def __str__(self):
+        return self.batch
 #student model
 class Student(models.Model):
     roll_no = models.CharField(max_length=8, primary_key=True)
@@ -9,7 +23,8 @@ class Student(models.Model):
     email = models.EmailField()
     password = models.CharField(max_length=100)
     batch = models.CharField(max_length=100, blank=True)
-    branch = models.CharField(max_length=100, blank=True)
+    # branch = models.CharField(max_length=100, blank=True)
+    specialization=models.ForeignKey(Credits , on_delete=models.CASCADE)
     cgpa = models.FloatField(blank=True)
     areaofInterest = models.TextField(blank=True)
     m10 = models.FloatField(blank=True)
@@ -73,11 +88,11 @@ class Company(models.Model):
         return self.name
     
 #credits model
-class Credits(models.Model):
-    specialization = models.CharField(max_length=100)
-    batch = models.CharField(max_length=8)
-    credits = models.IntegerField()
-    class Meta:
-        unique_together = ('specialization', 'batch')
-    def __str__(self):
-        return self.credits
+# class Credits(models.Model):
+#     specialization = models.CharField(max_length=100)
+#     batch = models.CharField(max_length=8)
+#     credits = models.IntegerField()
+#     class Meta:
+#         unique_together = ('specialization', 'batch')
+#     def __str__(self):
+#         return self.credits
