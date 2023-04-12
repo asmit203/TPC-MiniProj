@@ -16,6 +16,28 @@ class Credits(models.Model):
         unique_together = ('specialization', 'batch')
     def __str__(self):
         return self.batch
+    
+    
+#company model
+class Company(models.Model):
+    cid = models.CharField(max_length=100)
+    reqCandDet = models.TextField()
+    minQual = models.TextField()
+    marksCriteria = models.TextField()
+    salaryPackage = models.TextField()
+    mode_of_interview = models.CharField(max_length=50,choices=(
+        ('Online_written','Online Written'),
+        ('Offline_written','Offline Written'),
+        ('Online_interview','Online Interview'),
+        ('Offine_interview','Offline Inteview'),
+    ))
+    time_of_start_iitp = models.TextField()
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    password = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+    
 #student model
 class Student(models.Model):
     roll_no = models.CharField(max_length=8, primary_key=True)
@@ -46,7 +68,9 @@ class Student(models.Model):
 #alumni model
 class Alumni(models.Model):
     name = models.CharField(max_length=100)
-    cid = models.CharField(max_length=100)
+    rollnumber = models.CharField(max_length=8, primary_key=True)
+    # cid = models.CharField(max_length=100)
+    cid=models.ForeignKey(Company , on_delete=models.CASCADE)
     email = models.EmailField()
     password = models.CharField(max_length=100)
     batch = models.CharField(max_length=100)
@@ -64,26 +88,6 @@ class Alumni(models.Model):
     msem6 = models.FloatField(blank=True)
     msem7 = models.FloatField(blank=True)
     msem8 = models.FloatField(blank=True)
-    def __str__(self):
-        return self.name
-    
-#company model
-class Company(models.Model):
-    cid = models.CharField(max_length=100)
-    reqCandDet = models.TextField()
-    minQual = models.TextField()
-    marksCriteria = models.TextField()
-    salaryPackage = models.TextField()
-    mode_of_interview = models.CharField(max_length=50,choices=(
-        ('Online_written','Online Written'),
-        ('Offline_written','Offline Written'),
-        ('Online_interview','Online Interview'),
-        ('Offine_interview','Offline Inteview'),
-    ))
-    time_of_start_iitp = models.TextField()
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    password = models.CharField(max_length=100)
     def __str__(self):
         return self.name
     
