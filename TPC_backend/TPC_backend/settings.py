@@ -31,7 +31,7 @@ SECRET_KEY = env("SECRET_KEY")  # here
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "users",
     "profiles",
     "jobs",
-    
+    "corsheaders",
     "rest_framework"
 ]
 
@@ -58,6 +58,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = "TPC_backend.urls"
@@ -79,6 +80,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "TPC_backend.wsgi.application"
+
+# White listing the localhost:3000 port
+# for React
+
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
 
 
 # Database
