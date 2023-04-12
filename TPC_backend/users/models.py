@@ -29,6 +29,13 @@ class Alumni(models.Model):
     
 #company model
 class Company(models.Model):
+    cid = models.CharField(max_length=100)
+    reqCandDet = models.TextField()
+    minQual = models.TextField()
+    marksCriteria = models.TextField()
+    salaryPackage = models.TextField()
+    mode_of_interview = models.TextField()
+    time_of_start_iitp = models.TextField()
     name = models.CharField(max_length=100)
     email = models.EmailField()
     password = models.CharField(max_length=100)
