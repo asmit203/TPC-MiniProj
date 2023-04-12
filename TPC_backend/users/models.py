@@ -17,7 +17,7 @@ class Credits(models.Model):
     def __str__(self):
         return self.batch
     
-    
+
 #company model
 class Company(models.Model):
     cid = models.CharField(max_length=100)
@@ -44,7 +44,8 @@ class Student(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     password = models.CharField(max_length=100)
-    batch = models.CharField(max_length=100, blank=True)
+    # batch = models.CharField(max_length=100, blank=True)
+    batch=models.ForeignKey(Credits , on_delete=models.CASCADE)
     # branch = models.CharField(max_length=100, blank=True)
     specialization=models.ForeignKey(Credits , on_delete=models.CASCADE)
     cgpa = models.FloatField(blank=True)
