@@ -31,7 +31,7 @@ class Student(models.Model):
 #alumni model
 class Alumni(models.Model):
     name = models.CharField(max_length=100)
-    cid = models.CharField(max_length=100, foreign_key=True)
+    cid = models.CharField(max_length=100)
     email = models.EmailField()
     password = models.CharField(max_length=100)
     batch = models.CharField(max_length=100)
