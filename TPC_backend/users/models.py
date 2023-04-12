@@ -72,3 +72,12 @@ class Company(models.Model):
     def __str__(self):
         return self.name
     
+#credits model
+class Credits(models.Model):
+    specialization = models.CharField(max_length=100)
+    batch = models.CharField(max_length=8)
+    credits = models.IntegerField()
+    class Meta:
+        unique_together = ('specialization', 'batch')
+    def __str__(self):
+        return self.credits
