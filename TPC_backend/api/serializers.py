@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from users.models import Student, Alumni, Company
+from users.models import Student, Credits
 
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:

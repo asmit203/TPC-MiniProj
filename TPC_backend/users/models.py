@@ -2,16 +2,16 @@ from django.db import models
 
 # Create your models here.
 class Credits(models.Model):
-    specialization = models.CharField(max_length=100)
-    batch = models.CharField(max_length=8)
-    credits1 = models.IntegerField()
-    credits2 = models.IntegerField()
-    credits3 = models.IntegerField()
-    credits4 = models.IntegerField()
-    credits5 = models.IntegerField()
-    credits6 = models.IntegerField()
-    credits7 = models.IntegerField()
-    credits8 = models.IntegerField()
+    specialization = models.CharField(max_length=100,blank=True, null=True)
+    batch = models.CharField(max_length=8,blank=True, null=True)
+    credits1 = models.IntegerField(blank=True, null=True)
+    credits2 = models.IntegerField(blank=True, null=True)
+    credits3 = models.IntegerField(blank=True, null=True)
+    credits4 = models.IntegerField(blank=True, null=True)
+    credits5 = models.IntegerField(blank=True, null=True)
+    credits6 = models.IntegerField(blank=True, null=True)
+    credits7 = models.IntegerField(blank=True, null=True)
+    credits8 = models.IntegerField(blank=True, null=True)
     class Meta:
         unique_together = ('specialization', 'batch')
     def __str__(self):
@@ -62,7 +62,7 @@ class Student(models.Model):
     msem7 = models.FloatField(blank=True,null=True)
     msem8 = models.FloatField(blank=True,null=True)
 
-    resume = models.FileField(upload_to='resume/', blank=True)
+    resume = models.FileField(upload_to='resume/', blank=True, null=True)
     def __str__(self):
         return self.name
     

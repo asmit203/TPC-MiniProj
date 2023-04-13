@@ -1,3 +1,4 @@
+-- SQLBook: Code
 -- MySQL dump 10.13  Distrib 8.0.32, for macos13.0 (arm64)
 --
 -- Host: localhost    Database: tpc_backend
@@ -125,7 +126,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$600000$FqpYtKPEv72JQj3nxXtRzW$9cm1iDAm5x90l6TCu2MvDmpH07oSubDTRcs0dlilAik=','2023-04-12 22:46:36.005630',1,'tpc','','','tpc_dev@gmail.com',1,1,'2023-04-12 22:20:18.479951');
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$600000$FqpYtKPEv72JQj3nxXtRzW$9cm1iDAm5x90l6TCu2MvDmpH07oSubDTRcs0dlilAik=','2023-04-13 18:35:30.736967',1,'tpc','','','tpc_dev@gmail.com',1,1,'2023-04-12 22:20:18.479951');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -259,7 +260,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -268,7 +269,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2023-04-10 04:53:48.837812'),(2,'auth','0001_initial','2023-04-10 04:53:48.949836'),(3,'admin','0001_initial','2023-04-10 04:53:48.976874'),(4,'admin','0002_logentry_remove_auto_add','2023-04-10 04:53:48.980943'),(5,'admin','0003_logentry_add_action_flag_choices','2023-04-10 04:53:48.992094'),(6,'contenttypes','0002_remove_content_type_name','2023-04-10 04:53:49.012694'),(7,'auth','0002_alter_permission_name_max_length','2023-04-10 04:53:49.024416'),(8,'auth','0003_alter_user_email_max_length','2023-04-10 04:53:49.031339'),(9,'auth','0004_alter_user_username_opts','2023-04-10 04:53:49.034033'),(10,'auth','0005_alter_user_last_login_null','2023-04-10 04:53:49.045539'),(11,'auth','0006_require_contenttypes_0002','2023-04-10 04:53:49.046177'),(12,'auth','0007_alter_validators_add_error_messages','2023-04-10 04:53:49.048753'),(13,'auth','0008_alter_user_username_max_length','2023-04-10 04:53:49.063913'),(14,'auth','0009_alter_user_last_name_max_length','2023-04-10 04:53:49.077129'),(15,'auth','0010_alter_group_name_max_length','2023-04-10 04:53:49.083299'),(16,'auth','0011_update_proxy_permissions','2023-04-10 04:53:49.086229'),(17,'auth','0012_alter_user_first_name_max_length','2023-04-10 04:53:49.098294'),(18,'sessions','0001_initial','2023-04-10 04:53:49.106727'),(19,'users','0001_initial','2023-04-12 22:12:20.185246'),(20,'jobs','0001_initial','2023-04-12 22:12:20.224812'),(21,'users','0002_remove_student_specialization_alter_student_m10_and_more','2023-04-12 23:21:45.144093');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2023-04-10 04:53:48.837812'),(2,'auth','0001_initial','2023-04-10 04:53:48.949836'),(3,'admin','0001_initial','2023-04-10 04:53:48.976874'),(4,'admin','0002_logentry_remove_auto_add','2023-04-10 04:53:48.980943'),(5,'admin','0003_logentry_add_action_flag_choices','2023-04-10 04:53:48.992094'),(6,'contenttypes','0002_remove_content_type_name','2023-04-10 04:53:49.012694'),(7,'auth','0002_alter_permission_name_max_length','2023-04-10 04:53:49.024416'),(8,'auth','0003_alter_user_email_max_length','2023-04-10 04:53:49.031339'),(9,'auth','0004_alter_user_username_opts','2023-04-10 04:53:49.034033'),(10,'auth','0005_alter_user_last_login_null','2023-04-10 04:53:49.045539'),(11,'auth','0006_require_contenttypes_0002','2023-04-10 04:53:49.046177'),(12,'auth','0007_alter_validators_add_error_messages','2023-04-10 04:53:49.048753'),(13,'auth','0008_alter_user_username_max_length','2023-04-10 04:53:49.063913'),(14,'auth','0009_alter_user_last_name_max_length','2023-04-10 04:53:49.077129'),(15,'auth','0010_alter_group_name_max_length','2023-04-10 04:53:49.083299'),(16,'auth','0011_update_proxy_permissions','2023-04-10 04:53:49.086229'),(17,'auth','0012_alter_user_first_name_max_length','2023-04-10 04:53:49.098294'),(18,'sessions','0001_initial','2023-04-10 04:53:49.106727'),(19,'users','0001_initial','2023-04-12 22:12:20.185246'),(20,'jobs','0001_initial','2023-04-12 22:12:20.224812'),(21,'users','0002_remove_student_specialization_alter_student_m10_and_more','2023-04-12 23:21:45.144093'),(22,'users','0003_alter_credits_batch_alter_credits_credits1_and_more','2023-04-13 18:52:04.052276'),(23,'users','0004_alter_student_resume','2023-04-13 18:52:08.228854');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,7 +295,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('kardq2u2yo88y50lijeapg489xbrhm6a','.eJxVjEEOwiAQRe_C2hAGcKa4dN8zNEOHStVAUtqV8e7apAvd_vfef6mBtzUPW0vLMIu6KFCn3y3y-EhlB3Lncqt6rGVd5qh3RR-06b5Kel4P9-8gc8vfmix3ZMRIgA7BBrQgjr1HIiBBMucYvWOL0XpHxjgvJIScwhSch0m9P6FRNlI:1pmjEa:NcXeyTqQEJ_nrYWAaIeDlCe-ycHm7dgy-X57K0kn1F4','2023-04-26 22:46:36.006610');
+INSERT INTO `django_session` VALUES ('0ta4j1lt4ma9ek1fiimutvjfk672hjq8','.eJxVjEEOwiAQRe_C2hAGcKa4dN8zNEOHStVAUtqV8e7apAvd_vfef6mBtzUPW0vLMIu6KFCn3y3y-EhlB3Lncqt6rGVd5qh3RR-06b5Kel4P9-8gc8vfmix3ZMRIgA7BBrQgjr1HIiBBMucYvWOL0XpHxjgvJIScwhSch0m9P6FRNlI:1pn1n8:-XA3WVNTjLznNumE2ygVqDMeFkwqaCiGJplZjl_Vm5s','2023-04-27 18:35:30.738243'),('kardq2u2yo88y50lijeapg489xbrhm6a','.eJxVjEEOwiAQRe_C2hAGcKa4dN8zNEOHStVAUtqV8e7apAvd_vfef6mBtzUPW0vLMIu6KFCn3y3y-EhlB3Lncqt6rGVd5qh3RR-06b5Kel4P9-8gc8vfmix3ZMRIgA7BBrQgjr1HIiBBMucYvWOL0XpHxjgvJIScwhSch0m9P6FRNlI:1pmjEa:NcXeyTqQEJ_nrYWAaIeDlCe-ycHm7dgy-X57K0kn1F4','2023-04-26 22:46:36.006610');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -439,16 +440,16 @@ DROP TABLE IF EXISTS `users_credits`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users_credits` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `specialization` varchar(100) NOT NULL,
-  `batch` varchar(8) NOT NULL,
-  `credits1` int NOT NULL,
-  `credits2` int NOT NULL,
-  `credits3` int NOT NULL,
-  `credits4` int NOT NULL,
-  `credits5` int NOT NULL,
-  `credits6` int NOT NULL,
-  `credits7` int NOT NULL,
-  `credits8` int NOT NULL,
+  `specialization` varchar(100) DEFAULT NULL,
+  `batch` varchar(8) DEFAULT NULL,
+  `credits1` int DEFAULT NULL,
+  `credits2` int DEFAULT NULL,
+  `credits3` int DEFAULT NULL,
+  `credits4` int DEFAULT NULL,
+  `credits5` int DEFAULT NULL,
+  `credits6` int DEFAULT NULL,
+  `credits7` int DEFAULT NULL,
+  `credits8` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_credits_specialization_batch_bfa04880_uniq` (`specialization`,`batch`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -476,8 +477,8 @@ CREATE TABLE `users_student` (
   `name` varchar(100) NOT NULL,
   `email` varchar(254) NOT NULL,
   `password` varchar(100) NOT NULL,
-  `cgpa` double NOT NULL,
-  `areaofInterest` longtext NOT NULL,
+  `cgpa` double DEFAULT NULL,
+  `areaofInterest` longtext,
   `m10` double DEFAULT NULL,
   `m11` double DEFAULT NULL,
   `m12` double DEFAULT NULL,
@@ -489,8 +490,8 @@ CREATE TABLE `users_student` (
   `msem6` double DEFAULT NULL,
   `msem7` double DEFAULT NULL,
   `msem8` double DEFAULT NULL,
-  `resume` varchar(100) NOT NULL,
-  `batch_id` bigint NOT NULL,
+  `resume` varchar(100) DEFAULT NULL,
+  `batch_id` bigint DEFAULT NULL,
   PRIMARY KEY (`roll_no`),
   KEY `users_student_batch_id_e8543593_fk_users_credits_id` (`batch_id`),
   CONSTRAINT `users_student_batch_id_e8543593_fk_users_credits_id` FOREIGN KEY (`batch_id`) REFERENCES `users_credits` (`id`)
@@ -516,4 +517,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-13 23:20:26
+-- Dump completed on 2023-04-14  0:22:46
