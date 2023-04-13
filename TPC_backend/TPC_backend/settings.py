@@ -31,7 +31,7 @@ SECRET_KEY = env("SECRET_KEY")  # here
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -88,6 +88,14 @@ REST_FRAMEWORK = {
 
 WSGI_APPLICATION = "TPC_backend.wsgi.application"
 
+# White listing the localhost:3000 port
+# for React
+
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -103,10 +111,10 @@ DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
 		'NAME': 'tpc_backend',
-		'USER': 'root',
+		'USER': 'user',
 		'PASSWORD': env('PASSWORD'),
 		'HOST':'localhost',
-		'PORT':'8000',
+		'PORT':'3306',
 	}
 }
 
