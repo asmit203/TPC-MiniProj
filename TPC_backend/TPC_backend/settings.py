@@ -111,10 +111,10 @@ DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
 		'NAME': 'tpc_backend',
-		'USER': 'user',
+		'USER': 'root',
 		'PASSWORD': env('PASSWORD'),
 		'HOST':'localhost',
-		'PORT':'3306',
+		'PORT':'8000',
 	}
 }
 
