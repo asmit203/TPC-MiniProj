@@ -8,6 +8,7 @@ class job(models.Model):
     jid = models.CharField(max_length=100, primary_key=True)
     jobTitle = models.CharField(max_length=100)
     jobDesc = models.TextField()
+    flag_job = models.BooleanField()
 
 
     def __str__(self):
