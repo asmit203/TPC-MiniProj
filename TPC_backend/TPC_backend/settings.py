@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     "users",
     "profiles",
     "jobs",
+    "rest_framework",
     "corsheaders",
-    "rest_framework"
 ]
 
 MIDDLEWARE = [
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'corsheaders.middleware.CorsMiddleware'
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "TPC_backend.urls"
@@ -78,6 +78,13 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        
+    )
+}
 
 WSGI_APPLICATION = "TPC_backend.wsgi.application"
 
@@ -100,16 +107,16 @@ CORS_ORIGIN_WHITELIST = (
 #     }
 # }
 
-# DATABASES = {
-# 	'default': {
-# 		'ENGINE': 'django.db.backends.mysql',
-# 		'NAME': 'tpc_backend',
-# 		'USER': 'root',
-# 		'PASSWORD': env('PASSWORD'),
-# 		'HOST':'localhost',
-# 		'PORT':'8000',
-# 	}
-# }
+DATABASES = {
+	'default': {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'tpc_backend',
+		'USER': 'user',
+		'PASSWORD': env('PASSWORD'),
+		'HOST':'localhost',
+		'PORT':'3306',
+	}
+}
 
 
 # DATABASES = {
@@ -163,3 +170,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = ["http://localhost:5173","http://127.0.0.1:5731"]
+
