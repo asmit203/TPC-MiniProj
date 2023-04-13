@@ -7,9 +7,10 @@ from .serializers import LoginSerializer, RegisterSerializer
 
 @api_view(['POST'])
 def login(request):
-    serializer = LoginSerializer(data=request.data)
-    if not serializer.is_valid():
-        return Response({'message': 'Error! Could not login'}, status=status.HTTP_400_BAD_REQUEST)
+    allset=Student.objects.all()
+    is_there = allset.filter(email=request.data['email'], password=request.data['password'])
+    if(is_there.exists() == False):
+        return Response({'message': 'Error! Could not login'}, status=status.HTTP_404_NOT_FOUND)
     return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
