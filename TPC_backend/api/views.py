@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from users.models import Student, Alumni, Company
 from .serializers import StudentSerializer
 
+
 @api_view(['POST'])
 def login(request):
     serializer = StudentSerializer(data=request.data)
