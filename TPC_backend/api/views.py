@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from users.models import Student, Alumni, Company, Credits
 from .serializers import StudentSerializer, RegisterSerializer
 from django.core import serializers
-
+from jobs.models import Job
 
 @api_view(['POST'])
 def login(request):
@@ -42,3 +42,11 @@ def get_user(request):
         student_json = serializers.serialize('json', student)
         return Response({'user': student_json}, status=status.HTTP_200_OK)
     return Response({'user': None}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+def get_job(request):
+    job=Job.objects.raw("SELECT * FROM Job")
+    job_json = serializers.serialize('json', job)
+    return Response({'jobs': job_json}, status=status.HTTP_200_OK)
+
+
