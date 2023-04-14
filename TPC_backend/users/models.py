@@ -22,7 +22,7 @@ class Credits(models.Model):
 class Company(models.Model):
     cid = models.CharField(max_length=100)
     reqCandDet = models.TextField()
-    minQual = models.TextField()
+    # minQual = models.FloatField(default=7.5)
     marksCriteria = models.TextField()
     salaryPackage = models.TextField()
     mode_of_interview = models.CharField(max_length=50,choices=(
@@ -36,7 +36,7 @@ class Company(models.Model):
     email = models.EmailField()
     password = models.CharField(max_length=100)
     def __str__(self):
-        return self.name
+        return self.cid
     
 #student model
 class Student(models.Model):

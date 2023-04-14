@@ -8,11 +8,13 @@ class job(models.Model):
     jid = models.CharField(max_length=100, primary_key=True)
     jobTitle = models.CharField(max_length=100)
     jobDesc = models.TextField()
-    flag_job = models.BooleanField()
-
-
+    flag_job = models.BooleanField(default=False)
+    minQual = models.FloatField(default=7.5)
+    # def save(self, *args, **kwargs):
+    #     self.minQual = self.cid.minQual # set minQual of job as minQual of company
+    #     super().save(*args, **kwargs)
     def __str__(self):
-        return self.jobTitle
+        return self.jid
     
 
 #applied model

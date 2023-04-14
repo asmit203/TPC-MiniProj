@@ -63,10 +63,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "TPC_backend.urls"
 
+
+# later on clear out the dirs list below
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

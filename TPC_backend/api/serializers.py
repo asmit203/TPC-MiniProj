@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from users.models import Student, Credits
 
-class LoginSerializer(serializers.ModelSerializer):
+class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ('email', 'password')
