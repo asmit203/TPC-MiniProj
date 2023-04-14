@@ -19,5 +19,5 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('job_search/', views.job_search, name='job_search'),
+    # path('job_search/', views.job_search, name='job_search'),
 ]

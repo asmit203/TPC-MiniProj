@@ -11,12 +11,33 @@ def login(request):
     if(request.session.get('email')):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     allset=Student.objects.all()
-    is_there = allset.filter(email=request.data['email'], password=request.data['password'])
-    if(is_there.exists() == False):
-        return Response({'message': 'Error! Could not login'}, status=status.HTTP_404_NOT_FOUND)
-    # user_json = serializers.serialize('json', is_there)
-    request.session['email'] = request.data['email']
-    return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    usertype = request.data['user_type']
+    if(usertype == 'alumni'):
+        is_there = allset.filter(email=request.data['email'], password=request.data['password'])
+        if(is_there.exists() == False):
+            return Response({'message': 'Error! Could not login'}, status=status.HTTP_404_NOT_FOUND)
+        # user_json = serializers.serialize('json', is_there)
+        request.session['email'] = request.data['email']
+        request.session['user_type'] = request.data['user_type']
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    
+    elif(usertype == 'student'):
+        is_there = allset.filter(email=request.data['email'], password=request.data['password'])
+        if(is_there.exists() == False):
+            return Response({'message': 'Error! Could not login'}, status=status.HTTP_404_NOT_FOUND)
+        # user_json = serializers.serialize('json', is_there)
+        request.session['email'] = request.data['email']
+        request.session['user_type'] = request.data['user_type']
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    
+    elif(usertype == 'company'):
+        is_there = allset.filter(email=request.data['email'], password=request.data['password'])
+        if(is_there.exists() == False):
+            return Response({'message': 'Error! Could not login'}, status=status.HTTP_404_NOT_FOUND)
+        # user_json = serializers.serialize('json', is_there)
+        request.session['email'] = request.data['email']
+        request.session['user_type'] = request.data['user_type']
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def register(request):
@@ -42,3 +63,9 @@ def get_user(request):
         student_json = serializers.serialize('json', student)
         return Response({'user': student_json}, status=status.HTTP_200_OK)
     return Response({'user': None}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+def get_job(request):
+    job=Job.objects.raw("SELECT * FROM Job")
+    job_json = serializers.serialize('json', job)
+    return Response({'jobs': job_json}, status=status.HTTP_200_OK)
