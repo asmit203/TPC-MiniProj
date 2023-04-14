@@ -20,9 +20,9 @@ class Job(models.Model):
 #applied model
 class Applied(models.Model):
     jid = models.ForeignKey(Job, on_delete=models.CASCADE)
-    roll_no = models.CharField(max_length=8)
+    # roll_no = models.CharField(max_length=8)
     status = models.CharField(max_length=100)
-    sid = models.ForeignKey(Student, on_delete=models.CASCADE)
+    roll_no = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='roll_noj')
     def __str__(self):
         return self.roll_no
     

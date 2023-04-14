@@ -44,27 +44,23 @@ def register(request):
     batch_object = Credits.objects.all().filter(batch=request.data['batch'], specialization=request.data['specialization'])
     usertype = request.data['user_type']
     if(usertype == 'alumni'):
-        if batch_object.exists() == False:
-            return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
-        batch_object = batch_object[0]
-        Alumni.objects.create(roll_no=request.data['roll_no'], name=request.data['name'], email=request.data['email'], password=request.data['password'], batch=batch_object)
+        Alumni.objects.create(roll_no=request.data['roll_no'], name=request.data['name'], email=request.data['email'], password=request.data['password'])
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
-    if(usertype == 'company'):
-        if batch_object.exists() == False:
-            return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
-        batch_object = batch_object[0]
+    elif(usertype == 'company'):
         cid = request.data['name'] + "_"
         cid += request.data['email']
-        Company.objects.create(cid=cid, name=request.data['name'], email=request.data['email'], password=request.data['password'], batch=batch_object)
+        Company.objects.create(cid=cid, name=request.data['name'], email=request.data['email'], password=request.data['password'])
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
-    if(usertype == 'student'):
+    elif(usertype == 'student'):
         if batch_object.exists() == False:
             return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
         batch_object = batch_object[0]
         Student.objects.create(roll_no=request.data['roll_no'], name=request.data['name'], email=request.data['email'], password=request.data['password'], batch=batch_object)
-    
-    return Response({'message': 'Success'}, status=status.HTTP_200_OK)
-
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    else:
+        return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['POST'])
 def logout(request):
     del request.session['email']
@@ -88,15 +84,28 @@ def get_job(request):
 
 @api_view(['GET'])
 def get_applied(request):
-    applied=Applied.objects.raw("SELECT * FROM Applied")
+    eml = request.session['email']
+    rn = Student.objects.all().filter(email=eml)
+    rn = rn[0]['roll_no']
+    applied=Applied.objects.all().filter(roll_no=rn)
     applied_json = serializers.serialize('json', applied)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def get_profile(request):
     if(request.session.get('email')):
+        usertype = request.session['user_type']
         email = request.session['email']
-        student = Student.objects.all().filter(email=email)
-        student_json = serializers.serialize('json', student)
-        return Response({'profile': student_json}, status=status.HTTP_200_OK)
+        if(usertype == 'student'):
+            student = Student.objects.all().filter(email=email)
+            student_json = serializers.serialize('json', student)
+            return Response({'profile': student_json,'user_type':usertype}, status=status.HTTP_200_OK)
+        elif(usertype == 'alumni'):
+            alumni = Alumni.objects.all().filter(email=email)
+            alumni_json = serializers.serialize('json', alumni)
+            return Response({'profile': alumni_json,'user_type':usertype}, status=status.HTTP_200_OK)
+        elif(usertype == 'company'):
+            company = Company.objects.all().filter(email=email)
+            company_json = serializers.serialize('json', company)
+            return Response({'profile': company_json,'user_type':usertype}, status=status.HTTP_200_OK)
     return Response({'profile': None}, status=status.HTTP_401_UNAUTHORIZED)

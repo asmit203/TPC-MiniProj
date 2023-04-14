@@ -35,6 +35,7 @@ class Company(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     password = models.CharField(max_length=100)
+    companypic = models.ImageField(upload_to='company_pics/', blank=True, null=True)
     def __str__(self):
         return self.cid
     
@@ -63,6 +64,7 @@ class Student(models.Model):
     msem8 = models.FloatField(blank=True,null=True)
 
     resume = models.FileField(upload_to='resume/', blank=True, null=True)
+    studprofilepic = models.ImageField(upload_to='studprofile_pics/', blank=True, null=True)
     def __str__(self):
         return self.name
     
@@ -71,33 +73,25 @@ class Alumni(models.Model):
     name = models.CharField(max_length=100)
     roll_no = models.CharField(max_length=8, primary_key=True)
     # cid = models.CharField(max_length=100)
-    cid=models.ForeignKey(Company , on_delete=models.CASCADE)
+    cid=models.ForeignKey(Company , on_delete=models.CASCADE,null=True,blank=True)
     email = models.EmailField()
-    password = models.CharField(max_length=100)
-    batch = models.CharField(max_length=100)
-    branch = models.CharField(max_length=100)
-    company = models.CharField(max_length=100)
-    designation = models.CharField(max_length=100)
-    m10 = models.FloatField(blank=True)
-    m11 = models.FloatField(blank=True)
-    m12 = models.FloatField(blank=True)
-    msem1 = models.FloatField(blank=True)
-    msem2 = models.FloatField(blank=True)
-    msem3 = models.FloatField(blank=True)
-    msem4 = models.FloatField(blank=True)
-    msem5 = models.FloatField(blank=True)
-    msem6 = models.FloatField(blank=True)
-    msem7 = models.FloatField(blank=True)
-    msem8 = models.FloatField(blank=True)
+    password = models.CharField(max_length=100,null=True,blank=True)
+    batch = models.CharField(max_length=100,null=True,blank=True)
+    branch = models.CharField(max_length=100,null=True,blank=True)
+    company = models.CharField(max_length=100,null=True,blank=True)
+    designation = models.CharField(max_length=100,null=True,blank=True)
+    m10 = models.FloatField(blank=True,null=True)
+    m11 = models.FloatField(blank=True,null=True)
+    m12 = models.FloatField(blank=True,null=True)
+    msem1 = models.FloatField(blank=True,null=True)
+    msem2 = models.FloatField(blank=True,null=True)
+    msem3 = models.FloatField(blank=True,null=True)
+    msem4 = models.FloatField(blank=True,null=True)
+    msem5 = models.FloatField(blank=True,null=True)
+    msem6 = models.FloatField(blank=True,null=True)
+    msem7 = models.FloatField(blank=True,null=True)
+    msem8 = models.FloatField(blank=True,null=True)
+    alumprofilepic = models.ImageField(upload_to='alumprofile_pics/', blank=True, null=True)
     def __str__(self):
         return self.name
     
-#credits model
-# class Credits(models.Model):
-#     specialization = models.CharField(max_length=100)
-#     batch = models.CharField(max_length=8)
-#     credits = models.IntegerField()
-#     class Meta:
-#         unique_together = ('specialization', 'batch')
-#     def __str__(self):
-#         return self.credits
