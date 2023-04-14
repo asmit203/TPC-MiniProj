@@ -109,3 +109,52 @@ def get_profile(request):
             company_json = serializers.serialize('json', company)
             return Response({'profile': company_json,'user_type':usertype}, status=status.HTTP_200_OK)
     return Response({'profile': None}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['POST'])
+def apply(request):
+    if(request.session.get('email')):
+        eml = request.session['email']
+        rn = Student.objects.all().filter(email=eml)
+        rn = rn[0]['roll_no']
+        jid = request.data['jid']
+        Applied.objects.create(roll_no=rn, jid=jid)
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    return Response({'message': 'Error! Could not apply'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def add_job(request):
+    if(request.session.get('email')):
+        eml = request.session['email']
+        cid = Company.objects.all().filter(email=eml)
+        cid = cid[0]['cid']
+        Job.objects.create(cid=cid, jid=request.data['jid'], title=request.data['title'], description=request.data['description'])
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    return Response({'message': 'Error! Could not add job'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def update_profile(request):
+    if(request.session.get('email')):
+        usertype = request.session['user_type']
+        email = request.session['email']
+        if(usertype == 'student'):
+            Student.objects.filter(email=email).update(name=request.data['name'], email=request.data['email'], password=request.data['password'])
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+        elif(usertype == 'alumni'):
+            Alumni.objects.filter(email=email).update(name=request.data['name'], email=request.data['email'], password=request.data['password'])
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+        elif(usertype == 'company'):
+            Company.objects.filter(email=email).update(name=request.data['name'], email=request.data['email'], password=request.data['password'])
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def delete_job(request):
+    if(request.session.get('email')):
+        eml = request.session['email']
+        cid = Company.objects.all().filter(email=eml)
+        cid = cid[0]['cid']
+        jid = request.data['jid']
+        Job.objects.filter(cid=cid, jid=jid).delete()
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    return Response({'message': 'Error! Could not delete job'}, status=status.HTTP_400_BAD_REQUEST)
