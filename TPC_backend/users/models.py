@@ -69,7 +69,7 @@ class Student(models.Model):
 #alumni model
 class Alumni(models.Model):
     name = models.CharField(max_length=100)
-    rollnumber = models.CharField(max_length=8, primary_key=True)
+    roll_no = models.CharField(max_length=8, primary_key=True)
     # cid = models.CharField(max_length=100)
     cid=models.ForeignKey(Company , on_delete=models.CASCADE)
     email = models.EmailField()

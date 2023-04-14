@@ -3,7 +3,7 @@ from users.models import Company,Student
 # Create your models here.
 
 # #job model
-class job(models.Model):
+class Job(models.Model):
     cid = models.ForeignKey(Company, on_delete=models.CASCADE)
     jid = models.CharField(max_length=100, primary_key=True)
     jobTitle = models.CharField(max_length=100)
@@ -18,8 +18,8 @@ class job(models.Model):
     
 
 #applied model
-class applied(models.Model):
-    jid = models.ForeignKey(job, on_delete=models.CASCADE)
+class Applied(models.Model):
+    jid = models.ForeignKey(Job, on_delete=models.CASCADE)
     roll_no = models.CharField(max_length=8)
     status = models.CharField(max_length=100)
     sid = models.ForeignKey(Student, on_delete=models.CASCADE)

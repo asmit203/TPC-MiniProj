@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from users.models import Student, Alumni, Company, Credits
 from .serializers import StudentSerializer, RegisterSerializer
 from django.core import serializers
-
+from jobs.models import Job, Applied
 
 @api_view(['POST'])
 def login(request):
@@ -42,10 +42,26 @@ def login(request):
 @api_view(['POST'])
 def register(request):
     batch_object = Credits.objects.all().filter(batch=request.data['batch'], specialization=request.data['specialization'])
-    if batch_object.exists() == False:
-        return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
-    batch_object = batch_object[0]
-    Student.objects.create(roll_no=request.data['roll_no'], name=request.data['name'], email=request.data['email'], password=request.data['password'], batch=batch_object)
+    usertype = request.data['user_type']
+    if(usertype == 'alumni'):
+        if batch_object.exists() == False:
+            return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
+        batch_object = batch_object[0]
+        Alumni.objects.create(roll_no=request.data['roll_no'], name=request.data['name'], email=request.data['email'], password=request.data['password'], batch=batch_object)
+
+    if(usertype == 'company'):
+        if batch_object.exists() == False:
+            return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
+        batch_object = batch_object[0]
+        cid = request.data['name'] + "_"
+        cid += request.data['email']
+        Company.objects.create(cid=cid, name=request.data['name'], email=request.data['email'], password=request.data['password'], batch=batch_object)
+
+    if(usertype == 'student'):
+        if batch_object.exists() == False:
+            return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
+        batch_object = batch_object[0]
+        Student.objects.create(roll_no=request.data['roll_no'], name=request.data['name'], email=request.data['email'], password=request.data['password'], batch=batch_object)
     
     return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
@@ -69,3 +85,18 @@ def get_job(request):
     job=Job.objects.raw("SELECT * FROM Job")
     job_json = serializers.serialize('json', job)
     return Response({'jobs': job_json}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_applied(request):
+    applied=Applied.objects.raw("SELECT * FROM Applied")
+    applied_json = serializers.serialize('json', applied)
+    return Response({'applied': applied_json}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_profile(request):
+    if(request.session.get('email')):
+        email = request.session['email']
+        student = Student.objects.all().filter(email=email)
+        student_json = serializers.serialize('json', student)
+        return Response({'profile': student_json}, status=status.HTTP_200_OK)
+    return Response({'profile': None}, status=status.HTTP_401_UNAUTHORIZED)

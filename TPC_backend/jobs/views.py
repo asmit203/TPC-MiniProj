@@ -2,8 +2,8 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.shortcuts import render
-from .models import job
-from .models import applied
+from .models import Job
+from .models import Applied
 from django.contrib.auth.decorators import login_required
 from users.models import Company, Student, Credits, Alumni
 
