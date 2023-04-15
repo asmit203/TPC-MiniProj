@@ -15,7 +15,6 @@ import os
 @api_view(["GET"])
 def view_pdf(request):
     # Replace the filename with the path to your PDF file
-    # filename = request.data["filename"]
     filename = request.GET['filename']
     filename = filename[:-1]
     filename = "/Users/asmitganguly/Developer/All_Projects/TPC_miniProject_CS260/GITHUB/TPC-MiniProj/TPC_backend/resume/" + filename
@@ -112,11 +111,20 @@ def get_job(request):
 def get_applied(request):
     eml = request.session['email']
     rn = Student.objects.all().filter(email=eml)
+    # jobappl = Applied.objects.all().filter(roll_no = rn)
 
     rn = rn[0].roll_no
-
+    # print()
     applied=Applied.objects.all().filter(roll_no=rn)
-    applied_json = serializers.serialize('json', applied)
+    # jobappl = JobApplied.objects.all().filter(jid=applied.
+    jobarr = []
+    # print(type(applied[0].jid))
+    for jids in applied.values():
+        # print(jids)
+        jj =  jids["jid_id"]
+        ll = Job.objects.all().filter(jid =jj)
+        jobarr.append(ll.first())
+    applied_json = serializers.serialize('json', jobarr)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -213,47 +221,44 @@ def logout_cop(request):
         pass
     return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
-#get resume
-# @api_view(['GET'])
-# def get_resume(request):
-#     if(request.session.get('email')):
-#         usertype = request.session['user_type']
-#         email = request.session['email']
-#         if(usertype == 'student'):
-#             student = Student.objects.all().filter(email=email)
-#             student_json = serializers.serialize('json', student)
-#             return Response({'resume': student_json,'user_type':usertype}, status=status.HTTP_200_OK)
-#         elif(usertype == 'alumni'):
-#             alumni = Alumni.objects.all().filter(email=email)
-#             alumni_json = serializers.serialize('json', alumni)
-#             return Response({'resume': alumni_json,'user_type':usertype}, status=status.HTTP_200_OK)
-#     return Response({'resume': None}, status=status.HTTP_401_UNAUTHORIZED)
+#company see what they have posted
+@api_view(["GET"])
+def job_posted(request):
+    eml = request.session['email']
+    cid = Company.objects.all().filter(email=eml)
+    # jobappl = Applied.objects.all().filter(roll_no = rn)
 
+    cid = cid[0].cid
+    # print()
+    applied=Applied.objects.all().filter(cid=cid)
+    # jobappl = JobApplied.objects.all().filter(jid=applied.
+    jobarr = []
+    # print(type(applied[0].jid))
+    for jids in applied.values():
+        # print(jids)
+        jj =  jids["jid_id"]
+        ll = Job.objects.all().filter(jid =jj)
+        jobarr.append(ll.first())
+    applied_json = serializers.serialize('json', jobarr)
+    return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
+#company see who applied 
+@api_view(["GET"])
+def whoapplied(request):
+    eml = request.session['email']
+    cid = Company.objects.all().filter(email=eml)
+    # jobappl = Applied.objects.all().filter(roll_no = rn)
 
-# class PassthroughRenderer(renderers.BaseRenderer):
-#     """
-#         Return data as-is. View should supply a Response.
-#     """
-#     media_type = ''
-#     format = ''
-#     def render(self, data, accepted_media_type=None, renderer_context=None):
-#         return data
-
-# class ExampleViewSet(viewsets.ReadOnlyModelViewSet):
-#     # email = request.session['email']
-#     queryset = Student.objects.all()
-
-#     @action(methods=['get'], detail=True, renderer_classes=(PassthroughRenderer,))
-#     def download(self, request):
-#         instance = self.get_object()
-
-#         # get an open file handle (I'm just using a file attached to the model for this example):
-#         file_handle = instance.file.open()
-
-#         # send file
-#         response = FileResponse(file_handle, content_type='whatever')
-#         response['Content-Length'] = instance.file.size
-#         response['Content-Disposition'] = 'attachment; filename="%s"' % instance.file.name
-
-#         return response
+    cid = cid[0].cid
+    # print()
+    applied=Applied.objects.all().filter(cid=cid)
+    # jobappl = JobApplied.objects.all().filter(jid=applied.
+    jobarr = []
+    # print(type(applied[0].jid))
+    for jids in applied.values():
+        # print(jids)
+        jj =  jids["roll_no"]
+        ll = Student.objects.all().filter(roll_no =jj)
+        jobarr.append(ll.first())
+    applied_json = serializers.serialize('json', jobarr)
+    return Response({'applied': applied_json}, status=status.HTTP_200_OK)

@@ -23,6 +23,6 @@ class Applied(models.Model):
     # roll_no = models.CharField(max_length=8)
     status = models.CharField(max_length=100)
     roll_no = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='roll_noj')
-    def __str__(self):
-        return self.status
+    # def __str__(self):
+    #     return self.jid
     

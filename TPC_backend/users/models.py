@@ -64,7 +64,8 @@ class Student(models.Model):
     msem8 = models.FloatField(blank=True,null=True)
 
     resume = models.FileField(upload_to='resume/', blank=True, null=True)
-    studprofilepic = models.ImageField(upload_to='studprofile_pics/', blank=True, null=True)
+    studprofilepic = models.TextField(blank=True, null=True)
+    # studprofilepic = models.ImageField(upload_to='studprofile_pics/', blank=True, null=True)
     def __str__(self):
         return self.name
     
@@ -91,7 +92,8 @@ class Alumni(models.Model):
     msem6 = models.FloatField(blank=True,null=True)
     msem7 = models.FloatField(blank=True,null=True)
     msem8 = models.FloatField(blank=True,null=True)
-    alumprofilepic = models.ImageField(upload_to='alumprofile_pics/', blank=True, null=True)
+    # alumprofilepic = models.ImageField(upload_to='alumprofile_pics/', blank=True, null=True)
+    alumprofilepic = models.TextField(blank=True, null=True)
     def __str__(self):
         return self.name
     

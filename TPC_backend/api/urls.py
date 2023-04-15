@@ -8,6 +8,6 @@ urlpatterns = [
     path('logout/', views.logout),
     path('profile/', views.get_profile),
     path('applied/', views.get_applied),
+    path('whoapplied/', views.whoapplied),
     re_path(r'^viewpdf/$', views.view_pdf),
 ]
-    # (r'^user/(?P<username>\w{0,50})/$', views.profile_page,),
