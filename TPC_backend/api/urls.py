@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
@@ -8,4 +8,6 @@ urlpatterns = [
     path('logout/', views.logout),
     path('profile/', views.get_profile),
     path('applied/', views.get_applied),
+    re_path(r'^viewpdf/$', views.view_pdf),
 ]
+    # (r'^user/(?P<username>\w{0,50})/$', views.profile_page,),

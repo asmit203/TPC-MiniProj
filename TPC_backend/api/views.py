@@ -5,6 +5,32 @@ from users.models import Student, Alumni, Company, Credits
 from .serializers import StudentSerializer, RegisterSerializer
 from django.core import serializers
 from jobs.models import Job, Applied
+from django.http import FileResponse, Http404
+from rest_framework import viewsets,renderers
+from django.http import FileResponse
+from rest_framework import viewsets, renderers
+from rest_framework.decorators import action
+import os
+
+@api_view(["GET"])
+def view_pdf(request):
+    # Replace the filename with the path to your PDF file
+    # filename = request.data["filename"]
+    filename = request.GET['filename']
+    filename = filename[:-1]
+    filename = "/Users/asmitganguly/Developer/All_Projects/TPC_miniProject_CS260/GITHUB/TPC-MiniProj/TPC_backend/resume/" + filename
+    # print(filename)
+    if not os.path.exists(filename):
+        raise Http404('File not found')
+
+    
+    # Open the file in binary mode
+    f = open(filename, "rb")
+    response = FileResponse(f, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(filename)
+    return response
+
+
 
 @api_view(['POST'])
 def login(request):
@@ -202,3 +228,32 @@ def logout_cop(request):
 #             alumni_json = serializers.serialize('json', alumni)
 #             return Response({'resume': alumni_json,'user_type':usertype}, status=status.HTTP_200_OK)
 #     return Response({'resume': None}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+# class PassthroughRenderer(renderers.BaseRenderer):
+#     """
+#         Return data as-is. View should supply a Response.
+#     """
+#     media_type = ''
+#     format = ''
+#     def render(self, data, accepted_media_type=None, renderer_context=None):
+#         return data
+
+# class ExampleViewSet(viewsets.ReadOnlyModelViewSet):
+#     # email = request.session['email']
+#     queryset = Student.objects.all()
+
+#     @action(methods=['get'], detail=True, renderer_classes=(PassthroughRenderer,))
+#     def download(self, request):
+#         instance = self.get_object()
+
+#         # get an open file handle (I'm just using a file attached to the model for this example):
+#         file_handle = instance.file.open()
+
+#         # send file
+#         response = FileResponse(file_handle, content_type='whatever')
+#         response['Content-Length'] = instance.file.size
+#         response['Content-Disposition'] = 'attachment; filename="%s"' % instance.file.name
+
+#         return response
