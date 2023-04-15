@@ -86,7 +86,9 @@ def get_job(request):
 def get_applied(request):
     eml = request.session['email']
     rn = Student.objects.all().filter(email=eml)
+
     rn = rn[0].roll_no
+
     applied=Applied.objects.all().filter(roll_no=rn)
     applied_json = serializers.serialize('json', applied)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
@@ -118,7 +120,7 @@ def apply(request):
         rn = Student.objects.all().filter(email=eml)
         rn = rn[0]['roll_no']
         jid = request.data['jid']
-        Applied.objects.create(roll_no=rn, jid=jid)
+        Applied.objects.create(roll_no=rn, jid=jid,status=True)
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not apply'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -158,3 +160,45 @@ def delete_job(request):
         Job.objects.filter(cid=cid, jid=jid).delete()
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not delete job'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def delete_profile(request):
+    if(request.session.get('email')):
+        usertype = request.session['user_type']
+        email = request.session['email']
+        if(usertype == 'student'):
+            Student.objects.filter(email=email).delete()
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+        elif(usertype == 'alumni'):
+            Alumni.objects.filter(email=email).delete()
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+        elif(usertype == 'company'):
+            Company.objects.filter(email=email).delete()
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    return Response({'message': 'Error! Could not delete profile'}, status=status.HTTP_400_BAD_REQUEST)
+  
+
+@api_view(['POST'])
+def logout_cop(request):
+    try:
+        del request.session['email']
+        del request.session['user_type']
+    except KeyError:
+        pass
+    return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+
+#get resume
+# @api_view(['GET'])
+# def get_resume(request):
+#     if(request.session.get('email')):
+#         usertype = request.session['user_type']
+#         email = request.session['email']
+#         if(usertype == 'student'):
+#             student = Student.objects.all().filter(email=email)
+#             student_json = serializers.serialize('json', student)
+#             return Response({'resume': student_json,'user_type':usertype}, status=status.HTTP_200_OK)
+#         elif(usertype == 'alumni'):
+#             alumni = Alumni.objects.all().filter(email=email)
+#             alumni_json = serializers.serialize('json', alumni)
+#             return Response({'resume': alumni_json,'user_type':usertype}, status=status.HTTP_200_OK)
+#     return Response({'resume': None}, status=status.HTTP_401_UNAUTHORIZED)
