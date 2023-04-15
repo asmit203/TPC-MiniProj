@@ -131,3 +131,7 @@ dmypy.json
 conf.config
 *.gitignore*
 *.DS_Store*
+
+*.pdf
+*.png
+*.jpg
