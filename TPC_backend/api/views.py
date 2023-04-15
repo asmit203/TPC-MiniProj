@@ -86,7 +86,7 @@ def get_job(request):
 def get_applied(request):
     eml = request.session['email']
     rn = Student.objects.all().filter(email=eml)
-    rn = rn[0]['roll_no']
+    rn = rn[0].roll_no
     applied=Applied.objects.all().filter(roll_no=rn)
     applied_json = serializers.serialize('json', applied)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)

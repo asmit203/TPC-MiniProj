@@ -24,5 +24,5 @@ class Applied(models.Model):
     status = models.CharField(max_length=100)
     roll_no = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='roll_noj')
     def __str__(self):
-        return self.roll_no
+        return self.status
     

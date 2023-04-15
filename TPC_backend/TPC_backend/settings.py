@@ -116,7 +116,7 @@ DATABASES = {
 		'USER': 'root',
 		'PASSWORD': env('PASSWORD'),
 		'HOST':'localhost',
-		'PORT':'8000',
+		'PORT':'3306',
 	}
 }
 
