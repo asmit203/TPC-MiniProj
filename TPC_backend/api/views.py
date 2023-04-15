@@ -86,6 +86,7 @@ def get_job(request):
 def get_applied(request):
     eml = request.session['email']
     rn = Student.objects.all().filter(email=eml)
+    print("rn: ",rn)
     rn = rn[0]['roll_no']
     applied=Applied.objects.all().filter(roll_no=rn)
     applied_json = serializers.serialize('json', applied)
@@ -184,3 +185,19 @@ def logout_cop(request):
     except KeyError:
         pass
     return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+
+#get resume
+# @api_view(['GET'])
+# def get_resume(request):
+#     if(request.session.get('email')):
+#         usertype = request.session['user_type']
+#         email = request.session['email']
+#         if(usertype == 'student'):
+#             student = Student.objects.all().filter(email=email)
+#             student_json = serializers.serialize('json', student)
+#             return Response({'resume': student_json,'user_type':usertype}, status=status.HTTP_200_OK)
+#         elif(usertype == 'alumni'):
+#             alumni = Alumni.objects.all().filter(email=email)
+#             alumni_json = serializers.serialize('json', alumni)
+#             return Response({'resume': alumni_json,'user_type':usertype}, status=status.HTTP_200_OK)
+#     return Response({'resume': None}, status=status.HTTP_401_UNAUTHORIZED)
