@@ -118,7 +118,7 @@ def apply(request):
         rn = Student.objects.all().filter(email=eml)
         rn = rn[0]['roll_no']
         jid = request.data['jid']
-        Applied.objects.create(roll_no=rn, jid=jid)
+        Applied.objects.create(roll_no=rn, jid=jid,status=True)
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not apply'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -158,3 +158,29 @@ def delete_job(request):
         Job.objects.filter(cid=cid, jid=jid).delete()
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not delete job'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def delete_profile(request):
+    if(request.session.get('email')):
+        usertype = request.session['user_type']
+        email = request.session['email']
+        if(usertype == 'student'):
+            Student.objects.filter(email=email).delete()
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+        elif(usertype == 'alumni'):
+            Alumni.objects.filter(email=email).delete()
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+        elif(usertype == 'company'):
+            Company.objects.filter(email=email).delete()
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    return Response({'message': 'Error! Could not delete profile'}, status=status.HTTP_400_BAD_REQUEST)
+  
+
+@api_view(['POST'])
+def logout_cop(request):
+    try:
+        del request.session['email']
+        del request.session['user_type']
+    except KeyError:
+        pass
+    return Response({'message': 'Success'}, status=status.HTTP_200_OK)
