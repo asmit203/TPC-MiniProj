@@ -15,9 +15,11 @@ import os
 @api_view(["GET"])
 def view_pdf(request):
     # Replace the filename with the path to your PDF file
+    absolute_path = os.path.dirname(__file__)
+    relative_path = os.path.join(absolute_path, "../")
     filename = request.GET['filename']
-    filename = filename[:-1]
-    filename = "/Users/asmitganguly/Developer/All_Projects/TPC_miniProject_CS260/GITHUB/TPC-MiniProj/TPC_backend/resume/" + filename
+    # filename = filename[:-1]
+    filename = relative_path + filename
     # print(filename)
     if not os.path.exists(filename):
         raise Http404('File not found')
