@@ -325,8 +325,9 @@ def whoapplied(request):
 #resume upload and modification
 def upload_resume(request):
     if request.session['user_type'] == 'student':
+        eml = request.session['email']
         if request.method == "POST":
-            instance = Student(resume=request.FILES["resume"])
+            instance = Student.objects.all().filter(email=eml)(resume=request.FILES["resume"])
             instance.save()
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         else:
