@@ -58,7 +58,8 @@ class Student(models.Model):
     msem7 = models.TextField(blank=True, null=True)
     msem8 = models.TextField(blank=True, null=True)
 
-    resume = models.FileField(upload_to='resume/', blank=True, null=True)
+    # resume = models.FileField(upload_to='resume/', blank=True, null=True)
+    resume = models.TextField(blank=True, null=True)
     studprofilepic = models.TextField(blank=True, null=True)
     def __str__(self):
         return self.name

@@ -189,7 +189,7 @@ def apply(request):
     if(request.session.get('email')):
         eml = request.session['email']
         rn = Student.objects.all().filter(email=eml)
-        rn = rn.first()['roll_no']
+        rn = rn.values("roll_no")[0]
         jid = request.data['jid']
         Applied.objects.create(roll_no=rn, jid=jid,status=True)
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
@@ -357,25 +357,21 @@ def whoapplied(request):
 def upload_resume(request):
     eml = request.session['email']
     queryset = Student.objects.all().filter(email=eml)
-    serializer_class = PostViewSetSerializer
-    # permission_classes = (IsAuthenticated,)
-    # http_method_names = ['post', ]
+    # serializer_class = PostViewSetSerializer
+    # # permission_classes = (IsAuthenticated,)
+    # # http_method_names = ['post', ]
 
-    def create(self, request, *args, **kwargs):
-        data = {
-            "title": request.data.get('title'),
-            "resume": request.FILES.get(),
-            }
-        _serializer = self.serializer_class(data=data)
-        if _serializer.is_valid():
-            _serializer.save()
-            return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
-        else:
-            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # NOQA
-
-
-
-
+    # def create(self, request, *args, **kwargs):
+    #     data = {
+    #         "title": request.data.get('title'),
+    #         "resume": request.FILES.get(),
+    #         }
+    #     _serializer = self.serializer_class(data=data)
+    #     if _serializer.is_valid():
+    #         _serializer.save()
+    #         return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
+    #     else:
+    #         return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # NOQA
     # if request.session['user_type'] == 'student':
     #     eml = request.session['email']
     #     if request.method == "POST":
@@ -393,6 +389,8 @@ def upload_resume(request):
     #         return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
     # else:
     #     return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
+
+
     
 #job status by company
 @api_view(["POST"])
