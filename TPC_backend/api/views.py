@@ -198,7 +198,7 @@ def update_profile(request):
                 msem7=request.data['msem7'],
                 msem8=request.data['msem8'],
                 # resume=request.data['resume'],
-                studenprofilepic=request.data['studenprofilepic']
+                studprofilepic=request.data['studprofilepic']
                 )
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         elif(usertype == 'alumni'):
@@ -224,7 +224,7 @@ def update_profile(request):
                 msem7=request.data['msem7'],
                 msem8=request.data['msem8'],
                 # resume=request.data['resume'],
-                alumniprofilepic=request.data['alumniprofilepic']
+                alumprofilepic=request.data['alumniprofilepic']
                 )
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         elif(usertype == 'company'):
