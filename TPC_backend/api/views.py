@@ -318,8 +318,9 @@ def upload_resume(request):
     if request.session['user_type'] == 'student':
         eml = request.session['email']
         if request.method == "POST":
-            instance = Student.objects.all().filter(email=eml)(resume=request.FILES["resume"])
-            instance.save()
+            # instance = Student.objects.all().filter(email=eml).update(resume=request.FILES["resume"])
+            # instance.save()
+            Student.objects.all().filter(email=eml).update(resume=request.FILES["resume"])
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
