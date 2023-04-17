@@ -12,7 +12,7 @@ from rest_framework import viewsets, renderers
 from rest_framework.decorators import action
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-import os
+import os, json
 
 @api_view(["GET"])
 def view_pdf(request):
@@ -73,7 +73,16 @@ def register(request):
     batch_object = Credits.objects.all().filter(batch=request.data['batch'], specialization=request.data['specialization'])
     usertype = request.data['user_type']
     if(usertype == 'alumni'):
-        Alumni.objects.create(roll_no=request.data['roll_no'], name=request.data['name'], email=request.data['email'], password=request.data['password'])
+        batch = request.data['batch'] 
+        Alumni.objects.create(
+            roll_no=request.data['roll_no'], 
+            name=request.data['name'], 
+            email=request.data['email'], 
+            password=request.data['password']
+            )
+        #! raw query to update the batch field
+        Alumni.objects.raw("UPDATE users_alumni SET batch = %s WHERE email = %s", [request.data["batch"], request.data['email']])
+        Alumni.objects.raw("UPDATE users_alumni SET cid = %s WHERE email = %s", [request.data["cid"], request.data['email']])
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
     elif(usertype == 'company'):
@@ -342,3 +351,25 @@ def job_status(request):
             return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
+    
+#list of batches
+@api_view(["GET"])
+def batch_list(request):
+    batch = Credits.objects.all()
+    listbatch = []
+    for i in batch.values():
+        listbatch.append(i["batch"])
+    print(listbatch)
+    batch_json = json.dumps(listbatch, indent = 4) 
+    return Response({'batch': batch_json}, status=status.HTTP_200_OK)
+
+#list of batches
+@api_view(["GET"])
+def company_list(request):
+    batch = Company.objects.all()
+    listbatch = []
+    for i in batch.values():
+        listbatch.append(i["name"])
+    print(listbatch)
+    batch_json = json.dumps(listbatch, indent = 4) 
+    return Response({'cid': batch_json}, status=status.HTTP_200_OK)

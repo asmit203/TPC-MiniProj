@@ -18,5 +18,7 @@ urlpatterns = [
     path('jobpostedbycompany/', views.job_posted),
     path('whoappliedcompany/', views.whoapplied),
     path('uploadresume/', views.upload_resume),
+    path('batchlist/', views.batch_list),
+    path('cidlist/', views.company_list),   
     re_path(r'^viewpdf/$', views.view_pdf),
 ]
