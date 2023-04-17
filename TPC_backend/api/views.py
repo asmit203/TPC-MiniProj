@@ -348,3 +348,20 @@ def upload_resume(request):
             return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
+    
+#job status by company
+@api_view(["POST"])
+def job_status(request):
+    if request.session['user_type'] == 'student':
+        eml = request.session['email']
+        if request.method == "POST":
+            cid= Company.objects.all().filter(email=eml).first().cid
+            jid = request.data['jid']
+            roll_no = request.data['roll_no']
+            status = request.data['status']
+            Applied.objects.all().filter(jid=jid,roll_no=roll_no).update(status=status)
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
