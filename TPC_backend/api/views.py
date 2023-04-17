@@ -306,13 +306,13 @@ def job_posted(request):
 
     cid = cid[0].cid
     # print()
-    applied=Applied.objects.all().filter(cid=cid)
+    applied=Job.objects.all().filter(cid=cid)
     # jobappl = JobApplied.objects.all().filter(jid=applied.
     jobarr = []
     # print(type(applied[0].jid))
     for jids in applied.values():
         # print(jids)
-        jj =  jids["jid_id"]
+        jj =  jids["jid"]
         ll = Job.objects.all().filter(jid =jj)
         jobarr.append(ll.first())
     applied_json = serializers.serialize('json', jobarr)
