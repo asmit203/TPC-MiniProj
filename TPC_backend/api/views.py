@@ -214,14 +214,14 @@ def delete_profile(request):
     return Response({'message': 'Error! Could not delete profile'}, status=status.HTTP_400_BAD_REQUEST)
   
 
-@api_view(['POST'])
-def logout_cop(request):
-    try:
-        del request.session['email']
-        del request.session['user_type']
-    except KeyError:
-        pass
-    return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+# @api_view(['POST'])
+# def logout_cop(request):
+#     try:
+#         del request.session['email']
+#         del request.session['user_type']
+#     except KeyError:
+#         pass
+#     return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
 #company see what they have posted
 @api_view(["GET"])

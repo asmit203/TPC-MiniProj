@@ -9,5 +9,13 @@ urlpatterns = [
     path('profile/', views.get_profile),
     path('applied/', views.get_applied),
     path('whoapplied/', views.whoapplied),
+    path('getjobs/', views.get_job),
+    path('apply/', views.apply),
+    path('addjob/', views.add_job),
+    path('updateprofile/', views.update_profile),
+    path('deletejob/', views.delete_job),
+    path('deleteprofile/', views.delete_profile),
+    path('jobpostedbycompany/', views.job_posted),
+    path('whoappliedcompany/', views.whoapplied),
     re_path(r'^viewpdf/$', views.view_pdf),
 ]
