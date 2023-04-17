@@ -11,6 +11,15 @@ from django.http import FileResponse
 from rest_framework import viewsets, renderers
 from rest_framework.decorators import action
 from django.http import HttpResponseRedirect
+from rest_framework.serializers import ModelSerializer
+from rest_framework import exceptions
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import PostViewSetSerializer
+
+
 from django.shortcuts import render
 import os, json
 from django.db import connection
@@ -21,10 +30,10 @@ job_counter = 0
 def view_pdf(request):
     # Replace the filename with the path to your PDF file
     absolute_path = os.path.dirname(__file__)
-    relative_path = os.path.join(absolute_path, "../")
+    # relative_path = os.path.join(absolute_path, "../resume/")
     filename = request.GET['filename']
     # filename = filename[:-1]
-    filename = relative_path + filename
+    filename = absolute_path + "resume/" + filename
     # print(filename)
     if not os.path.exists(filename):
         raise Http404('File not found')
@@ -43,7 +52,7 @@ def login(request):
     if(request.session.get('email')):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     allset=Student.objects.all()
-    usertype = request.data['user_type']
+    usertype = str(request.data['user_type'])
     if(usertype == 'alumni'):
         is_there = Alumni.objects.all().filter(email=request.data['email'], password=request.data['password'])
         if(is_there.exists() == False):
@@ -180,7 +189,7 @@ def apply(request):
     if(request.session.get('email')):
         eml = request.session['email']
         rn = Student.objects.all().filter(email=eml)
-        rn = rn[0]['roll_no']
+        rn = rn.first()['roll_no']
         jid = request.data['jid']
         Applied.objects.create(roll_no=rn, jid=jid,status=True)
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
@@ -208,7 +217,7 @@ def update_profile(request):
         email = request.session['email']
         if(usertype == 'student'):
             with connection.cursor() as cursor:
-                    cursor.execute("UPDATE users_student SET batch_id = %s WHERE email = %s" ,[request.data["batch"],request.data['email']])
+                    cursor.execute("UPDATE users_student SET batch_id = %s WHERE email = %s" ,[str(request.data["batch"]),request.data['email']])
             stud = Student.objects.get(email=email)
             stud.name=request.data['name']
             stud.email=request.data['email']
@@ -344,19 +353,46 @@ def whoapplied(request):
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
 #resume upload and modification
+@api_view(["POST"])
 def upload_resume(request):
-    if request.session['user_type'] == 'student':
-        eml = request.session['email']
-        if request.method == "POST":
-            # instance = Student.objects.all().filter(email=eml).update(resume=request.FILES["resume"])
-            # instance.save()
+    eml = request.session['email']
+    queryset = Student.objects.all().filter(email=eml)
+    serializer_class = PostViewSetSerializer
+    # permission_classes = (IsAuthenticated,)
+    # http_method_names = ['post', ]
 
-            Student.objects.all().filter(email=eml).update(resume=request.FILES["resume"])
-            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    def create(self, request, *args, **kwargs):
+        data = {
+            "title": request.data.get('title'),
+            "resume": request.FILES.get(),
+            }
+        _serializer = self.serializer_class(data=data)
+        if _serializer.is_valid():
+            _serializer.save()
+            return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
         else:
-            return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # NOQA
+
+
+
+
+    # if request.session['user_type'] == 'student':
+    #     eml = request.session['email']
+    #     if request.method == "POST":
+    #         # instance = Student.objects.all().filter(email=eml).update(resume=request.FILES["resume"])
+    #         # instance.save()
+    #         # print(request.FILES)
+    #         # print("jijqeifhewoifh")
+    #         # print(request.data)
+    #         # print("hiii")
+            
+    #         # print("hemlo")
+    #         Student.objects.all().filter(email=eml).update(resume=request.FILES)
+    #         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+    #     else:
+    #         return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
+    # else:
+    #     return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
     
 #job status by company
 @api_view(["POST"])
