@@ -142,14 +142,16 @@ def get_applied(request):
     applied=Applied.objects.all().filter(roll_no=rn)
     # jobappl = JobApplied.objects.all().filter(jid=applied.
     jobarr = []
+    company_list = []
     # print(type(applied[0].jid))
     for jids in applied.values():
         # print(jids)
         jj =  jids["jid_id"]
         ll = Job.objects.all().filter(jid =jj)
+        company_list.append(ll[0].cid)
         jobarr.append(ll.first())
+    print(company_list)
 
-        
     applied_json = serializers.serialize('json', jobarr)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
