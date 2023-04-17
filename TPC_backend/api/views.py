@@ -172,34 +172,55 @@ def add_job(request):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not add job'}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT'])
+@api_view(['POST'])
 def update_profile(request):
     if(request.session.get('email')):
         usertype = request.session['user_type']
         email = request.session['email']
         if(usertype == 'student'):
-            Student.objects.filter(email=email).update(
-                name=request.data['name'], 
-                email=request.data['email'], 
-                password=request.data['password'],
-                roll_no=request.data['roll_no'],
-                batch=request.data['batch'],
-                cgpa=request.data['cgpa'],
-                areaofinterest=request.data['areaofinterest'],
-                m10=request.data['m10'],
-                m11=request.data['m11'],
-                m12=request.data['m12'],
-                msem1=request.data['msem1'],
-                msem2=request.data['msem2'],
-                msem3=request.data['msem3'],
-                msem4=request.data['msem4'],
-                msem5=request.data['msem5'],
-                msem6=request.data['msem6'],
-                msem7=request.data['msem7'],
-                msem8=request.data['msem8'],
-                # resume=request.data['resume'],
-                studprofilepic=request.data['studprofilepic']
-                )
+            # Student.objects.filter(email=email).update(
+            #     name=request.data['name'], 
+            #     email=request.data['email'], 
+            #     password=request.data['password'],
+            #     roll_no=request.data['roll_no'],
+            #     batch=request.data['batch'],
+            #     cgpa=request.data['cgpa'],
+            #     areaofinterest=request.data['areaofinterest'],
+            #     m10=request.data['m10'],
+            #     m11=request.data['m11'],
+            #     m12=request.data['m12'],
+            #     msem1=request.data['msem1'],
+            #     msem2=request.data['msem2'],
+            #     msem3=request.data['msem3'],
+            #     msem4=request.data['msem4'],
+            #     msem5=request.data['msem5'],
+            #     msem6=request.data['msem6'],
+            #     msem7=request.data['msem7'],
+            #     msem8=request.data['msem8'],
+            #     studprofilepic=request.data['studprofilepic']
+            #     )
+            stud = Student.objects.get(email=email)
+            stud.name=request.data['name']
+            stud.email=request.data['email']
+            stud.password=request.data['password']
+            stud.roll_no=request.data['roll_no']
+            # stud.batch = Credits.objects.filter(batch_yr=request.data['batch']),
+            # stud.cgpa=request.data['cgpa']
+            stud.areaofinterest=request.data['areaofinterest']
+            stud.m10=request.data['m10']
+            stud.m11=request.data['m11']
+            stud.m12=request.data['m12']
+            stud.msem1=request.data['msem1']
+            stud.msem2=request.data['msem2']
+            stud.msem3=request.data['msem3']
+            stud.msem4=request.data['msem4']
+            stud.msem5=request.data['msem5']
+            stud.msem6=request.data['msem6']
+            stud.msem7=request.data['msem7']
+            stud.msem8=request.data['msem8']
+            stud.studprofilepic=request.data['studprofilepic']
+            stud.save()
+
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         elif(usertype == 'alumni'):
             Alumni.objects.filter(email=email).update(
@@ -320,6 +341,7 @@ def upload_resume(request):
         if request.method == "POST":
             # instance = Student.objects.all().filter(email=eml).update(resume=request.FILES["resume"])
             # instance.save()
+
             Student.objects.all().filter(email=eml).update(resume=request.FILES["resume"])
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         else:
