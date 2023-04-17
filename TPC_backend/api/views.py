@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import os, json
+from django.db import connection
 
 @api_view(["GET"])
 def view_pdf(request):
@@ -187,6 +188,8 @@ def update_profile(request):
         usertype = request.session['user_type']
         email = request.session['email']
         if(usertype == 'student'):
+            with connection.cursor() as cursor:
+                    cursor.execute("UPDATE users_student SET batch_id = %s WHERE email = %s" ,[request.data["batch"],request.data['email']])
             stud = Student.objects.get(email=email)
             stud.name=request.data['name']
             stud.email=request.data['email']
@@ -210,30 +213,35 @@ def update_profile(request):
 
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         elif(usertype == 'alumni'):
+                with connection.cursor() as cursor:
+                    cursor.execute("UPDATE users_alumni SET batch_id = %s WHERE email = %s" ,[request.data["batch"],request.data['email']])
+                    cursor.execute("UPDATE users_alumni SET cid_id = %s WHERE email = %s;", [request.data["cid"], request.data['email']])
+    
+                # Alumni.objects.raw("UPDATE users_alumni SET batch_id = %s WHERE email = %s" ,[request.data["batch"],request.data['email']])
+                # Alumni.objects.raw("UPDATE users_alumni SET cid_id = %s WHERE email = %s;", [request.data["cid"], request.data['email']])
                 alum = Alumni.objects.get(email=email)
-                alum.name=request.data['name'], 
-                alum.email=request.data['email'], 
-                alum.password=request.data['password'],
-                alum.roll_no=request.data['roll_no'],
-                # alum.cid=request.data['cid'],
-                # alum.batch=request.data['batch'],
-                alum.cgpa=request.data['CGPA'],
-                alum.company=request.data['company'],
-                alum.designation=request.data['designation'],
-                alum.m10=request.data['m10'],
-                alum.m11=request.data['m11'],
-                alum.m12=request.data['m12'],
-                alum.msem1=request.data['msem1'],
-                alum.msem2=request.data['msem2'],
-                alum.msem3=request.data['msem3'],
-                alum.msem4=request.data['msem4'],
-                alum.msem5=request.data['msem5'],
-                alum.msem6=request.data['msem6'],
-                alum.msem7=request.data['msem7'],
-                alum.msem8=request.data['msem8'],
-                alum.alumprofilepic=request.data['alumniprofilepic']
+                alum.name=request.data['name']
+                alum.email=request.data['email']
+                alum.password=request.data['password']
+                print(request.data['roll_no'])
+                alum.roll_no=request.data['roll_no']
+                alum.cgpa=request.data['CGPA']
+                alum.company=request.data['company']
+                alum.designation=request.data['designation']
+                alum.m10=request.data['m10']
+                alum.m11=request.data['m11']
+                alum.m12=request.data['m12']
+                alum.msem1=request.data['msem1']
+                alum.msem2=request.data['msem2']
+                alum.msem3=request.data['msem3']
+                alum.msem4=request.data['msem4']
+                alum.msem5=request.data['msem5']
+                alum.msem6=request.data['msem6']
+                alum.msem7=request.data['msem7']
+                alum.msem8=request.data['msem8']
+                alum.alumprofilepic=request.data['alumprofilepic']
                 alum.save()
-                return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+                return Response({'message': 'Success alumni'}, status=status.HTTP_200_OK)
         elif(usertype == 'company'):
             Company.objects.filter(email=email).update(
                 name=request.data['name'], 

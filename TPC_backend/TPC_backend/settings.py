@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "jobs",
     "rest_framework",
     "corsheaders",
+    "groupadmin_users",
 ]
 
 MIDDLEWARE = [
