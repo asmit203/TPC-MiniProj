@@ -15,6 +15,8 @@ from django.shortcuts import render
 import os, json
 from django.db import connection
 
+job_counter = 0
+
 @api_view(["GET"])
 def view_pdf(request):
     # Replace the filename with the path to your PDF file
@@ -185,10 +187,13 @@ def add_job(request):
     if(request.session.get('email')):
         eml = request.session['email']
         cid = Company.objects.all().filter(email=eml)
-        cid = cid.first()['cid']
+        cid = cid.values("cid").first()["cid"]
+        jid = cid.replace('_', '')
+        global job_counter 
+        job_counter+=1
         # Job.objects.create(cid=cid, jid=request.data['jid'], title=request.data['title'], description=request.data['description'])
         with connection.cursor() as cursor:
-            cursor.execute("INSER INTO jobs_job(cid_id,jid,jobTitle,jobDesc,flag_job,minQual) VALUES(%s,%s,%s,%s,%s,%s)" ,[cid,request.data['jid'],request.data['jobTitle'],request.data['jobDesc'],request.data['flag_job'],request.data['minQual']])
+            cursor.execute("INSERT INTO jobs_job(cid_id,jid,jobTitle,jobDesc,flag_job,minQual) VALUES(%s,%s,%s,%s,%s,%s)" ,[cid,job_counter,request.data['jobTitle'],request.data['jobDesc'],request.data['flag_job'],request.data['minQual']])
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not add job'}, status=status.HTTP_400_BAD_REQUEST)
 
