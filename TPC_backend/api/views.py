@@ -114,7 +114,7 @@ def get_user(request):
 
 @api_view(['GET'])
 def get_job(request):
-    job=Job.objects.raw("SELECT * FROM Job")
+    job=Job.objects.raw("SELECT * FROM jobs_job")
     job_json = serializers.serialize('json', job)
     return Response({'jobs': job_json}, status=status.HTTP_200_OK)
 
