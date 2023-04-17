@@ -10,6 +10,8 @@ from rest_framework import viewsets,renderers
 from django.http import FileResponse
 from rest_framework import viewsets, renderers
 from rest_framework.decorators import action
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 import os
 
 @api_view(["GET"])
@@ -170,19 +172,74 @@ def add_job(request):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not add job'}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def update_profile(request):
     if(request.session.get('email')):
         usertype = request.session['user_type']
         email = request.session['email']
         if(usertype == 'student'):
-            Student.objects.filter(email=email).update(name=request.data['name'], email=request.data['email'], password=request.data['password'])
+            Student.objects.filter(email=email).update(
+                name=request.data['name'], 
+                email=request.data['email'], 
+                password=request.data['password'],
+                roll_no=request.data['roll_no'],
+                batch=request.data['batch'],
+                cgpa=request.data['cgpa'],
+                areaofinterest=request.data['areaofinterest'],
+                m10=request.data['m10'],
+                m11=request.data['m11'],
+                m12=request.data['m12'],
+                msem1=request.data['msem1'],
+                msem2=request.data['msem2'],
+                msem3=request.data['msem3'],
+                msem4=request.data['msem4'],
+                msem5=request.data['msem5'],
+                msem6=request.data['msem6'],
+                msem7=request.data['msem7'],
+                msem8=request.data['msem8'],
+                # resume=request.data['resume'],
+                studenprofilepic=request.data['studenprofilepic']
+                )
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         elif(usertype == 'alumni'):
-            Alumni.objects.filter(email=email).update(name=request.data['name'], email=request.data['email'], password=request.data['password'])
+            Alumni.objects.filter(email=email).update(
+                name=request.data['name'], 
+                email=request.data['email'], 
+                password=request.data['password'],
+                roll_no=request.data['roll_no'],
+                cid=request.data['cid'],
+                batch=request.data['batch'],
+                cgpa=request.data['cgpa'],
+                company=request.data['company'],
+                designation=request.data['designation'],
+                m10=request.data['m10'],
+                m11=request.data['m11'],
+                m12=request.data['m12'],
+                msem1=request.data['msem1'],
+                msem2=request.data['msem2'],
+                msem3=request.data['msem3'],
+                msem4=request.data['msem4'],
+                msem5=request.data['msem5'],
+                msem6=request.data['msem6'],
+                msem7=request.data['msem7'],
+                msem8=request.data['msem8'],
+                # resume=request.data['resume'],
+                alumniprofilepic=request.data['alumniprofilepic']
+                )
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         elif(usertype == 'company'):
-            Company.objects.filter(email=email).update(name=request.data['name'], email=request.data['email'], password=request.data['password'])
+            Company.objects.filter(email=email).update(
+                name=request.data['name'], 
+                email=request.data['email'], 
+                password=request.data['password'],
+                cid=request.data['cid'],
+                reqCandDet=request.data['reqCandDet'],
+                marksCriteria=request.data['marksCriteria'],
+                salaryPackage=request.data['salaryPackage'],
+                mode_of_interview=request.data['mode_of_interview'],
+                time_of_start_iitp=request.data['time_of_start_iitp'],
+                companypic=request.data['companypic']
+                )
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -264,3 +321,15 @@ def whoapplied(request):
         jobarr.append(ll.first())
     applied_json = serializers.serialize('json', jobarr)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
+
+#resume upload and modification
+def upload_resume(request):
+    if request.session['user_type'] == 'student':
+        if request.method == "POST":
+            instance = Student(resume=request.FILES["resume"])
+            instance.save()
+            return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
