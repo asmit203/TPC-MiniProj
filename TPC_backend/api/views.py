@@ -146,21 +146,26 @@ def get_applied(request):
     rn = Student.objects.all().filter(email=eml)
     # jobappl = Applied.objects.all().filter(roll_no = rn)
 
-    rn = rn[0].roll_no
+    rn = rn.first().roll_no
     # print()
     applied=Applied.objects.all().filter(roll_no=rn)
     # jobappl = JobApplied.objects.all().filter(jid=applied.
     jobarr = []
-    company_list = []
+    # company_list = []
     # print(type(applied[0].jid))
     for jids in applied.values():
         # print(jids)
         jj =  jids["jid_id"]
         ll = Job.objects.all().filter(jid =jj)
-        company_list.append(ll[0].cid)
+        # compname = Company.objects.filter(cid = ll.first().cid)
+        # company_list.append([compname.first().name, str(ll.first().jid.title),ll.first().jobTitle,ll.first().jobDesc,ll.first().flag_job,ll.first().cid,ll.first().minQual,ll.first().ctc])
+        new = ll.first()
+        # print(type(new))
+        # new.name = compname.first().name
         jobarr.append(ll.first())
-    print(company_list)
-
+        # jobarr.append(new)
+    # print(company_list)
+    # applied_json = json.dumps(company_list, indent = 4) 
     applied_json = serializers.serialize('json', jobarr)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
@@ -189,9 +194,12 @@ def apply(request):
     if(request.session.get('email')):
         eml = request.session['email']
         rn = Student.objects.all().filter(email=eml)
-        rn = rn.values("roll_no")[0]
+        rn = rn.first().roll_no
         jid = request.data['jid']
-        Applied.objects.create(roll_no=rn, jid=jid,status=True)
+        # Applied.objects.create(roll_no=rn, jid=jid,status=True)
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO jobs_applied(jid_id,status,roll_no_id) VALUES(%s,%s,%s)" ,[jid,"queue",rn])
+
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not apply'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -206,7 +214,7 @@ def add_job(request):
         job_counter+=1
         # Job.objects.create(cid=cid, jid=request.data['jid'], title=request.data['title'], description=request.data['description'])
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO jobs_job(cid_id,jid,jobTitle,jobDesc,flag_job,minQual,ctc) VALUES(%s,%s,%s,%s,%s,%s,%s)" ,[cid,job_counter,request.data['jobTitle'],request.data['jobDesc'],request.data['flag_job'],request.data['minQual'],request.data['ctc'],request.data['ctc']])
+            cursor.execute("INSERT INTO jobs_job(cid_id,jid,jobTitle,jobDesc,flag_job,minQual,ctc) VALUES(%s,%s,%s,%s,%s,%s,%s)" ,[cid,job_counter,request.data['jobTitle'],request.data['jobDesc'],request.data['flag_job'],request.data['minQual'],request.data['ctc']])
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not add job'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -317,7 +325,8 @@ def job_posted(request):
     cid = Company.objects.all().filter(email=eml)
     # jobappl = Applied.objects.all().filter(roll_no = rn)
 
-    cid = cid[0].cid
+    # cid = cid[0].cid
+    cid = cid.first().cid
     # print()
     applied=Job.objects.all().filter(cid=cid)
     # jobappl = JobApplied.objects.all().filter(jid=applied.
@@ -340,15 +349,16 @@ def whoapplied(request):
 
     cid = cid[0].cid
     # print()
-    applied=Applied.objects.all().filter(cid=cid)
-    # jobappl = JobApplied.objects.all().filter(jid=applied.
+    jobappl = Job.objects.all().filter(cid=cid)
     jobarr = []
     # print(type(applied[0].jid))
-    for jids in applied.values():
-        # print(jids)
-        jj =  jids["roll_no"]
-        ll = Student.objects.all().filter(roll_no =jj)
-        jobarr.append(ll.first())
+    for jb in jobappl.values():
+        applied=Applied.objects.all().filter(jid=jb['jid'])
+        for jids in applied.values():
+            print(jids)
+            jj =  jids["roll_no_id"]
+            ll = Student.objects.all().filter(roll_no =jj)
+            jobarr.append(ll.first())
     applied_json = serializers.serialize('json', jobarr)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
@@ -356,7 +366,8 @@ def whoapplied(request):
 @api_view(["POST"])
 def upload_resume(request):
     eml = request.session['email']
-    queryset = Student.objects.all().filter(email=eml)
+    stud = Student.objects.all().filter(email=eml)
+    stud.resume = request.data.get('resume')
     # serializer_class = PostViewSetSerializer
     # # permission_classes = (IsAuthenticated,)
     # # http_method_names = ['post', ]
