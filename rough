@@ -1,0 +1,22 @@
+
+            # Student.objects.filter(email=email).update(
+            #     name=request.data['name'], 
+            #     email=request.data['email'], 
+            #     password=request.data['password'],
+            #     roll_no=request.data['roll_no'],
+            #     batch=request.data['batch'],
+            #     cgpa=request.data['cgpa'],
+            #     areaofinterest=request.data['areaofinterest'],
+            #     m10=request.data['m10'],
+            #     m11=request.data['m11'],
+            #     m12=request.data['m12'],
+            #     msem1=request.data['msem1'],
+            #     msem2=request.data['msem2'],
+            #     msem3=request.data['msem3'],
+            #     msem4=request.data['msem4'],
+            #     msem5=request.data['msem5'],
+            #     msem6=request.data['msem6'],
+            #     msem7=request.data['msem7'],
+            #     msem8=request.data['msem8'],
+            #     studprofilepic=request.data['studprofilepic']
+            #     )
