@@ -92,10 +92,15 @@ def register(request):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
     elif(usertype == 'student'):
-        if batch_object.exists() == False:
-            return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
-        batch_object = batch_object[0]
-        Student.objects.create(roll_no=request.data['roll_no'], name=request.data['name'], email=request.data['email'], password=request.data['password'], batch=batch_object)
+        # if batch_object.exists() == False:
+        #     return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
+        # batch_object = batch_object[0]
+        Student.objects.create(
+            roll_no=request.data['roll_no'], 
+            name=request.data['name'], 
+            email=request.data['email'], 
+            password=request.data['password']
+            )
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     else:
         return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
