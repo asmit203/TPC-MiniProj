@@ -80,10 +80,7 @@ def register(request):
             name=request.data['name'], 
             email=request.data['email'], 
             password=request.data['password']
-            )
-        #! raw query to update the batch field
-        Alumni.objects.raw("UPDATE users_alumni SET batch = %s WHERE email = %s", [request.data["batch"], request.data['email']])
-        Alumni.objects.raw("UPDATE users_alumni SET cid = %s WHERE email = %s", [request.data["cid"], request.data['email']])
+        )
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
     elif(usertype == 'company'):
@@ -213,48 +210,44 @@ def update_profile(request):
 
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         elif(usertype == 'alumni'):
-                with connection.cursor() as cursor:
-                    cursor.execute("UPDATE users_alumni SET batch_id = %s WHERE email = %s" ,[request.data["batch"],request.data['email']])
-                    cursor.execute("UPDATE users_alumni SET cid_id = %s WHERE email = %s;", [request.data["cid"], request.data['email']])
-    
-                # Alumni.objects.raw("UPDATE users_alumni SET batch_id = %s WHERE email = %s" ,[request.data["batch"],request.data['email']])
-                # Alumni.objects.raw("UPDATE users_alumni SET cid_id = %s WHERE email = %s;", [request.data["cid"], request.data['email']])
-                alum = Alumni.objects.get(email=email)
-                alum.name=request.data['name']
-                alum.email=request.data['email']
-                alum.password=request.data['password']
-                print(request.data['roll_no'])
-                alum.roll_no=request.data['roll_no']
-                alum.cgpa=request.data['CGPA']
-                alum.company=request.data['company']
-                alum.designation=request.data['designation']
-                alum.m10=request.data['m10']
-                alum.m11=request.data['m11']
-                alum.m12=request.data['m12']
-                alum.msem1=request.data['msem1']
-                alum.msem2=request.data['msem2']
-                alum.msem3=request.data['msem3']
-                alum.msem4=request.data['msem4']
-                alum.msem5=request.data['msem5']
-                alum.msem6=request.data['msem6']
-                alum.msem7=request.data['msem7']
-                alum.msem8=request.data['msem8']
-                alum.alumprofilepic=request.data['alumprofilepic']
-                alum.save()
-                return Response({'message': 'Success alumni'}, status=status.HTTP_200_OK)
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE users_alumni SET batch_id = %s WHERE email = %s" ,[request.data["batch"],request.data['email']])
+                cursor.execute("UPDATE users_alumni SET cid_id = %s WHERE email = %s;", [request.data["cid"], request.data['email']])
+            alum = Alumni.objects.get(email=email)
+            alum.name=request.data['name']
+            alum.email=request.data['email']
+            alum.password=request.data['password']
+            print(request.data['roll_no'])
+            alum.roll_no=request.data['roll_no']
+            alum.cgpa=request.data['CGPA']
+            alum.company=request.data['company']
+            alum.designation=request.data['designation']
+            alum.m10=request.data['m10']
+            alum.m11=request.data['m11']
+            alum.m12=request.data['m12']
+            alum.msem1=request.data['msem1']
+            alum.msem2=request.data['msem2']
+            alum.msem3=request.data['msem3']
+            alum.msem4=request.data['msem4']
+            alum.msem5=request.data['msem5']
+            alum.msem6=request.data['msem6']
+            alum.msem7=request.data['msem7']
+            alum.msem8=request.data['msem8']
+            alum.alumprofilepic=request.data['alumprofilepic']
+            alum.save()
+            return Response({'message': 'Success alumni'}, status=status.HTTP_200_OK)
         elif(usertype == 'company'):
-            Company.objects.filter(email=email).update(
-                name=request.data['name'], 
-                email=request.data['email'], 
-                password=request.data['password'],
-                cid=request.data['cid'],
-                reqCandDet=request.data['reqCandDet'],
-                marksCriteria=request.data['marksCriteria'],
-                salaryPackage=request.data['salaryPackage'],
-                mode_of_interview=request.data['mode_of_interview'],
-                time_of_start_iitp=request.data['time_of_start_iitp'],
-                companypic=request.data['companypic']
-                )
+            comp = Company.objects.get(email=email)
+            comp.name=request.data['name'] 
+            comp.email=request.data['email'] 
+            comp.password=request.data['password']
+            comp.reqCandDet=request.data['reqCandDet']
+            comp.marksCriteria=request.data['marksCriteria']
+            comp.salaryPackage=request.data['salaryPackage']
+            comp.mode_of_interview=request.data['mode_of_interview']
+            comp.time_of_start_iitp=request.data['time_of_start_iitp']
+            comp.companypic=request.data['companypic']
+            comp.save()
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
 
