@@ -175,7 +175,9 @@ def add_job(request):
         eml = request.session['email']
         cid = Company.objects.all().filter(email=eml)
         cid = cid[0]['cid']
-        Job.objects.create(cid=cid, jid=request.data['jid'], title=request.data['title'], description=request.data['description'])
+        # Job.objects.create(cid=cid, jid=request.data['jid'], title=request.data['title'], description=request.data['description'])
+        with connection.cursor() as cursor:
+            cursor.execute("INSER INTO jobs_job(cid_id,jid,jobTitle,jobDesc,flag_job,minQual) VALUES(%s,%s,%s,%s,%s,%s)" ,[cid,request.data['jid'],request.data['jobTitle'],request.data['jobDesc'],request.data['flag_job'],request.data['minQual']])
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not add job'}, status=status.HTTP_400_BAD_REQUEST)
 
