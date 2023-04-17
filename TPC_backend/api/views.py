@@ -71,10 +71,12 @@ def login(request):
 
 @api_view(['POST'])
 def register(request):
-    batch_object = Credits.objects.all().filter(batch=request.data['batch'], specialization=request.data['specialization'])
+    # batch_object = Credits.objects.all().filter(
+    #     batch=request.data['batch'], 
+    #     specialization=request.data['specialization'])
     usertype = request.data['user_type']
     if(usertype == 'alumni'):
-        batch = request.data['batch'] 
+        # batch = request.data['batch'] 
         Alumni.objects.create(
             roll_no=request.data['roll_no'], 
             name=request.data['name'], 
