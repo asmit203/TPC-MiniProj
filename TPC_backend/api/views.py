@@ -185,7 +185,7 @@ def add_job(request):
     if(request.session.get('email')):
         eml = request.session['email']
         cid = Company.objects.all().filter(email=eml)
-        cid = cid[0]['cid']
+        cid = cid.first()['cid']
         # Job.objects.create(cid=cid, jid=request.data['jid'], title=request.data['title'], description=request.data['description'])
         with connection.cursor() as cursor:
             cursor.execute("INSER INTO jobs_job(cid_id,jid,jobTitle,jobDesc,flag_job,minQual) VALUES(%s,%s,%s,%s,%s,%s)" ,[cid,request.data['jid'],request.data['jobTitle'],request.data['jobDesc'],request.data['flag_job'],request.data['minQual']])
