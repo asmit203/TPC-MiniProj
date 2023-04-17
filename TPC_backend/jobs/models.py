@@ -10,6 +10,7 @@ class Job(models.Model):
     jobDesc = models.TextField()
     flag_job = models.BooleanField(default=False)
     minQual = models.FloatField(default=7.5)
+    ctc = models.IntegerField(default=4000000)
     # def save(self, *args, **kwargs):
     #     self.minQual = self.cid.minQual # set minQual of job as minQual of company
     #     super().save(*args, **kwargs)

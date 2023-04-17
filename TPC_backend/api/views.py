@@ -148,6 +148,8 @@ def get_applied(request):
         jj =  jids["jid_id"]
         ll = Job.objects.all().filter(jid =jj)
         jobarr.append(ll.first())
+
+        
     applied_json = serializers.serialize('json', jobarr)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
@@ -193,7 +195,7 @@ def add_job(request):
         job_counter+=1
         # Job.objects.create(cid=cid, jid=request.data['jid'], title=request.data['title'], description=request.data['description'])
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO jobs_job(cid_id,jid,jobTitle,jobDesc,flag_job,minQual) VALUES(%s,%s,%s,%s,%s,%s)" ,[cid,job_counter,request.data['jobTitle'],request.data['jobDesc'],request.data['flag_job'],request.data['minQual']])
+            cursor.execute("INSERT INTO jobs_job(cid_id,jid,jobTitle,jobDesc,flag_job,minQual,ctc) VALUES(%s,%s,%s,%s,%s,%s,%s)" ,[cid,job_counter,request.data['jobTitle'],request.data['jobDesc'],request.data['flag_job'],request.data['minQual'],request.data['ctc'],request.data['ctc']])
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not add job'}, status=status.HTTP_400_BAD_REQUEST)
 
