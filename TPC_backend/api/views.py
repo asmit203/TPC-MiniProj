@@ -88,6 +88,8 @@ def register(request):
     elif(usertype == 'company'):
         cid = request.data['name'] + "_"
         cid += request.data['email']
+        cid = cid.replace("@", "_")
+        cid = cid.replace(".", "_")
         Company.objects.create(cid=cid, name=request.data['name'], email=request.data['email'], password=request.data['password'])
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
@@ -104,6 +106,8 @@ def register(request):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     else:
         return Response({'message': 'Error! Could not register'}, status=status.HTTP_400_BAD_REQUEST)
+    
+
 @api_view(['POST'])
 def logout(request):
     del request.session['email']
