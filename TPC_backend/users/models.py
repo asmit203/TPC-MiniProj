@@ -33,7 +33,7 @@ class Company(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     password = models.TextField()
-    companypic = models.ImageField(upload_to='company_pics/', blank=True, null=True)
+    companypic = models.TextField(blank=True, null=True)
     def __str__(self):
         return self.cid
     

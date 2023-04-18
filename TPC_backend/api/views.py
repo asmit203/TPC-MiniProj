@@ -26,26 +26,6 @@ from django.db import connection
 
 job_counter = 0
 
-# @api_view(["GET"])
-# def view_pdf(request):
-#     # Replace the filename with the path to your PDF file
-#     absolute_path = os.path.dirname(__file__)
-#     # relative_path = os.path.join(absolute_path, "../resume/")
-#     filename = request.GET['filename']
-#     # filename = filename[:-1]
-#     filename = absolute_path + "resume/" + filename
-#     # print(filename)
-#     if not os.path.exists(filename):
-#         raise Http404('File not found')
-
-    
-#     # Open the file in binary mode
-#     f = open(filename, "rb")
-#     response = FileResponse(f, content_type='application/pdf')
-#     response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(filename)
-#     return response
-
-
 
 @api_view(['POST'])
 def login(request):
@@ -59,18 +39,14 @@ def login(request):
 
         if(check_password(request.data['password'], alm[0]['password'])==False):
             return Response({'message': 'Error! Could not login Alumni'}, status=status.HTTP_404_NOT_FOUND)
-        # user_json = serializers.serialize('json', is_there)
         request.session['email'] = request.data['email']
         request.session['user_type'] = request.data['user_type']
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     
     elif(usertype == 'student'):
         stud = Student.objects.all().filter(email=request.data['email']).values()
-        # print(check_password(request.data['password'], stud[0]['password']))
-        # print(stud[0]['password'])
         if(check_password(request.data['password'], stud[0]['password'])==False):
             return Response({'message': 'Error! Could not login Student'}, status=status.HTTP_404_NOT_FOUND)
-        # user_json = serializers.serialize('json', is_there)
         request.session['email'] = request.data['email']
         request.session['user_type'] = request.data['user_type']
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
@@ -152,28 +128,14 @@ def get_job(request):
 def get_applied(request):
     eml = request.session['email']
     rn = Student.objects.all().filter(email=eml)
-    # jobappl = Applied.objects.all().filter(roll_no = rn)
-
     rn = rn.first().roll_no
-    # print()
     applied=Applied.objects.all().filter(roll_no=rn)
-    # jobappl = JobApplied.objects.all().filter(jid=applied.
     jobarr = []
-    # company_list = []
-    # print(type(applied[0].jid))
     for jids in applied.values():
-        # print(jids)
         jj =  jids["jid_id"]
         ll = Job.objects.all().filter(jid =jj)
-        # compname = Company.objects.filter(cid = ll.first().cid)
-        # company_list.append([compname.first().name, str(ll.first().jid.title),ll.first().jobTitle,ll.first().jobDesc,ll.first().flag_job,ll.first().cid,ll.first().minQual,ll.first().ctc])
         new = ll.first()
-        # print(type(new))
-        # new.name = compname.first().name
         jobarr.append(ll.first())
-        # jobarr.append(new)
-    # print(company_list)
-    # applied_json = json.dumps(company_list, indent = 4) 
     applied_json = serializers.serialize('json', jobarr)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
@@ -393,15 +355,7 @@ def whoapplied(request):
             jobarr.append(ll.first())
     applied_json = serializers.serialize('json', jobarr)
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
-
-#resume upload and modification
-# @api_view(["POST"])
-# def upload_resume(request):
-#     eml = request.session['email']
-#     stud = Student.objects.all().filter(email=eml)
-#     stud.resume = request.data.get('resume')
-   
-    
+  
 #job status by company
 @api_view(["POST"])
 def job_status(request):
@@ -436,7 +390,7 @@ def company_list(request):
     batch = Company.objects.all()
     listbatch = []
     for i in batch.values():
-        listbatch.append(i["name"])
+        listbatch.append(i["cid"])
     print(listbatch)
     batch_json = json.dumps(listbatch, indent = 4) 
     return Response({'cid': batch_json}, status=status.HTTP_200_OK)

@@ -1,7 +1,9 @@
 # TPC-MiniProj
 
-https://prod.liveshare.vsengsaas.visualstudio.com/join?F02419EB9BDC9D274564A77129C26F329A59
+BY:
 
+ASMIT GANGULY 2101CS87
 
+DIVIT AJMERA 2101CS27
 
-* [ ] To make the Batch and specialization in dropdown
+ARKADEEP ACHARYA 2101AI41
