@@ -17,9 +17,12 @@ urlpatterns = [
     path('deleteprofile/', views.delete_profile),
     path('jobpostedbycompany/', views.job_posted),
     path('whoappliedcompany/', views.whoapplied),
-    path('uploadresume/', views.upload_resume),
+    # path('uploadresume/', views.upload_resume),
     path('batchlist/', views.batch_list),
     path('cidlist/', views.company_list),   
+    path('top3/',views.top3),
+    path('minctc/',views.eligible),
     # path('getcpi/', views.cpi_cal),   
-    re_path(r'^viewpdf/$', views.view_pdf),
+    # re_path(r'^viewpdf/$', views.view_pdf),
+
 ]

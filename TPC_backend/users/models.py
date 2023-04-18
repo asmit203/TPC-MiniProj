@@ -32,7 +32,7 @@ class Company(models.Model):
     time_of_start_iitp = models.TextField()
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    password = models.CharField(max_length=100)
+    password = models.TextField()
     companypic = models.ImageField(upload_to='company_pics/', blank=True, null=True)
     def __str__(self):
         return self.cid
@@ -42,7 +42,7 @@ class Student(models.Model):
     roll_no = models.CharField(max_length=8, primary_key=True)
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    password = models.CharField(max_length=100)
+    password = models.TextField()
     batch=models.ForeignKey(Credits , on_delete=models.CASCADE, related_name='batch_yr',default='2023_CSE')
     cgpa = models.TextField(blank=True, null=True)
     areaofInterest = models.TextField(blank=True, null=True)
@@ -70,7 +70,7 @@ class Alumni(models.Model):
     name = models.TextField()
     cid=models.ForeignKey(Company , on_delete=models.CASCADE,null=True,blank=True)
     email = models.EmailField()
-    password = models.TextField(null=True,blank=True)
+    password = models.TextField()
     batch=models.ForeignKey(Credits , on_delete=models.CASCADE, related_name='batch_yr_alum',default='2023_CSE')
     cgpa = models.TextField(blank=True, null=True)
     company = models.TextField(null=True,blank=True)

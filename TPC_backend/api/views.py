@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import PostViewSetSerializer
-
+from django.contrib.auth.hashers import make_password, check_password
 
 from django.shortcuts import render
 import os, json
@@ -26,24 +26,24 @@ from django.db import connection
 
 job_counter = 0
 
-@api_view(["GET"])
-def view_pdf(request):
-    # Replace the filename with the path to your PDF file
-    absolute_path = os.path.dirname(__file__)
-    # relative_path = os.path.join(absolute_path, "../resume/")
-    filename = request.GET['filename']
-    # filename = filename[:-1]
-    filename = absolute_path + "resume/" + filename
-    # print(filename)
-    if not os.path.exists(filename):
-        raise Http404('File not found')
+# @api_view(["GET"])
+# def view_pdf(request):
+#     # Replace the filename with the path to your PDF file
+#     absolute_path = os.path.dirname(__file__)
+#     # relative_path = os.path.join(absolute_path, "../resume/")
+#     filename = request.GET['filename']
+#     # filename = filename[:-1]
+#     filename = absolute_path + "resume/" + filename
+#     # print(filename)
+#     if not os.path.exists(filename):
+#         raise Http404('File not found')
 
     
-    # Open the file in binary mode
-    f = open(filename, "rb")
-    response = FileResponse(f, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(filename)
-    return response
+#     # Open the file in binary mode
+#     f = open(filename, "rb")
+#     response = FileResponse(f, content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(filename)
+#     return response
 
 
 
@@ -53,9 +53,11 @@ def login(request):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     allset=Student.objects.all()
     usertype = str(request.data['user_type'])
+    passw = make_password(request.data['password'])
     if(usertype == 'alumni'):
-        is_there = Alumni.objects.all().filter(email=request.data['email'], password=request.data['password'])
-        if(is_there.exists() == False):
+        alm = Alumni.objects.all().filter(email=request.data['email']).values()
+
+        if(check_password(request.data['password'], alm[0]['password'])==False):
             return Response({'message': 'Error! Could not login Alumni'}, status=status.HTTP_404_NOT_FOUND)
         # user_json = serializers.serialize('json', is_there)
         request.session['email'] = request.data['email']
@@ -63,8 +65,10 @@ def login(request):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     
     elif(usertype == 'student'):
-        is_there = Student.objects.all().filter(email=request.data['email'], password=request.data['password'])
-        if(is_there.exists() == False):
+        stud = Student.objects.all().filter(email=request.data['email']).values()
+        # print(check_password(request.data['password'], stud[0]['password']))
+        # print(stud[0]['password'])
+        if(check_password(request.data['password'], stud[0]['password'])==False):
             return Response({'message': 'Error! Could not login Student'}, status=status.HTTP_404_NOT_FOUND)
         # user_json = serializers.serialize('json', is_there)
         request.session['email'] = request.data['email']
@@ -72,8 +76,10 @@ def login(request):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     
     elif(usertype == 'company'):
-        is_there = Company.objects.all().filter(email=request.data['email'], password=request.data['password'])
-        if(is_there.exists() == False):
+        
+        comp = Company.objects.all().filter(email=request.data['email']).values()
+
+        if(check_password(request.data['password'], comp[0]['password'])==False):
             return Response({'message': 'Error! Could not login'}, status=status.HTTP_404_NOT_FOUND)
         # user_json = serializers.serialize('json', is_there)
         request.session['email'] = request.data['email']
@@ -88,11 +94,12 @@ def register(request):
     usertype = request.data['user_type']
     if(usertype == 'alumni'):
         # batch = request.data['batch'] 
+        # print "Hashed password is:", make_password("plain_text")
         Alumni.objects.create(
             roll_no=request.data['roll_no'], 
             name=request.data['name'], 
             email=request.data['email'], 
-            password=request.data['password']
+            password= make_password(request.data['password'])
         )
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
@@ -101,7 +108,7 @@ def register(request):
         cid += request.data['email']
         cid = cid.replace("@", "_")
         cid = cid.replace(".", "_")
-        Company.objects.create(cid=cid, name=request.data['name'], email=request.data['email'], password=request.data['password'])
+        Company.objects.create(cid=cid, name=request.data['name'], email=request.data['email'], password=make_password(request.data['password']))
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
 
     elif(usertype == 'student'):
@@ -112,7 +119,8 @@ def register(request):
             roll_no=request.data['roll_no'], 
             name=request.data['name'], 
             email=request.data['email'], 
-            password=request.data['password']
+            cgpa="0", 
+            password=make_password(request.data['password'])
             )
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     else:
@@ -221,36 +229,36 @@ def add_job(request):
 
 @api_view(['POST'])
 def update_profile(request):
-    
     if(request.session.get('email')):
         usertype = request.session['user_type']
         email = request.session['email']
-        def cpi_cal():
-            eml = request.session['email']
-            user = request.session['user_type']
-            if user == 'student' or user == 'alumni':
-                stud = Student.objects.all().filter(email=eml)
-                stud = stud.first()
-                batch = stud.batch
-                credits = Credits.objects.all().filter(batch=batch)
-                cred = credits.first().credits5
-                print(cred)
-                cpi = 0
-                sumCred = int(credits.first().credits1) + int(credits.first().credits2) + int(credits.first().credits3) +int(credits.first().credits4) + int(credits.first().credits5) +int(credits.first().credits6) +int(credits.first().credits7) +int(credits.first().credits8) 
-                cpi = int(credits.first().credits1)*int(stud.msem1) + int(credits.first().credits2)*int(stud.msem2) + int(credits.first().credits3)*int(stud.msem3) +int(credits.first().credits4)*int(stud.msem4) + int(credits.first().credits5)*int(stud.msem5) +int(credits.first().credits6)*int(stud.msem6) +int(credits.first().credits7)*int(stud.msem7) +int(credits.first().credits8)*int(stud.msem8) 
-                cpi = cpi/sumCred
-                return str(cpi)
-            else:
-                return str(0)
+        def cpi_cal(request):
+                eml = request.session['email']
+                user = request.session['user_type']
+                if user == 'student' or user == 'alumni':
+                    stud = Student.objects.all().filter(email=eml)
+                    stud = stud.first()
+                    batch = stud.batch
+                    credits = Credits.objects.all().filter(batch=batch)
+                    cred = credits.first().credits5
+                    print(cred)
+                    cpi = 0
+                    sumCred = (credits.first().credits1) + (credits.first().credits2) + (credits.first().credits3) +(credits.first().credits4) + (credits.first().credits5) +(credits.first().credits6) +(credits.first().credits7) +(credits.first().credits8) 
+                    cpi = (credits.first().credits1) * int(request.data['msem1']) + (credits.first().credits2) * int(request.data['msem2']) + (credits.first().credits3) * int(request.data['msem3']) + (credits.first().credits4) * int(request.data['msem4']) + (credits.first().credits5) * int(request.data['msem5']) + (credits.first().credits6) * int(request.data['msem6']) +(credits.first().credits7) * int(request.data['msem7']) +(credits.first().credits8) * int(request.data['msem8']) 
+                    cpi = cpi/sumCred
+                    return str(cpi)
+                else:
+                    return str(0)
         if(usertype == 'student'):
             with connection.cursor() as cursor:
                     cursor.execute("UPDATE users_student SET batch_id = %s WHERE email = %s" ,[str(request.data["batch"]),request.data['email']])
             stud = Student.objects.get(email=email)
             stud.name=request.data['name']
             stud.email=request.data['email']
-            stud.password=request.data['password']
+            stud.password=make_password(request.data['password'])
             stud.roll_no=request.data['roll_no']
-            stud.cgpa=cpi_cal()
+            stud.cgpa=cpi_cal(request=request)
+            # print(stud.cgpa)
             stud.areaofInterest=request.data['areaofinterest']
             stud.m10=request.data['m10']
             stud.m11=request.data['m11']
@@ -263,9 +271,10 @@ def update_profile(request):
             stud.msem6=request.data['msem6']
             stud.msem7=request.data['msem7']
             stud.msem8=request.data['msem8']
+            stud.resume=request.data['resume']
             stud.studprofilepic=request.data['studprofilepic']
             stud.save()
-
+            
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
         elif(usertype == 'alumni'):
             with connection.cursor() as cursor:
@@ -274,10 +283,10 @@ def update_profile(request):
             alum = Alumni.objects.get(email=email)
             alum.name=request.data['name']
             alum.email=request.data['email']
-            alum.password=request.data['password']
+            alum.password=make_password(request.data['password'])
             print(request.data['roll_no'])
             alum.roll_no=request.data['roll_no']
-            alum.cgpa=request.data['CGPA']
+            alum.cgpa=cpi_cal(request=request)
             alum.company=request.data['company']
             alum.designation=request.data['designation']
             alum.m10=request.data['m10']
@@ -291,6 +300,9 @@ def update_profile(request):
             alum.msem6=request.data['msem6']
             alum.msem7=request.data['msem7']
             alum.msem8=request.data['msem8']
+            alum.ctc=request.data['ctc']
+            alum.area=request.data['area']
+            alum.tenure=request.data['tenure']
             alum.alumprofilepic=request.data['alumprofilepic']
             alum.save()
             return Response({'message': 'Success alumni'}, status=status.HTTP_200_OK)
@@ -298,7 +310,7 @@ def update_profile(request):
             comp = Company.objects.get(email=email)
             comp.name=request.data['name'] 
             comp.email=request.data['email'] 
-            comp.password=request.data['password']
+            comp.password=make_password(request.data['password'])
             comp.reqCandDet=request.data['reqCandDet']
             comp.marksCriteria=request.data['marksCriteria']
             comp.salaryPackage=request.data['salaryPackage']
@@ -383,45 +395,12 @@ def whoapplied(request):
     return Response({'applied': applied_json}, status=status.HTTP_200_OK)
 
 #resume upload and modification
-@api_view(["POST"])
-def upload_resume(request):
-    eml = request.session['email']
-    stud = Student.objects.all().filter(email=eml)
-    stud.resume = request.data.get('resume')
-    # serializer_class = PostViewSetSerializer
-    # # permission_classes = (IsAuthenticated,)
-    # # http_method_names = ['post', ]
-
-    # def create(self, request, *args, **kwargs):
-    #     data = {
-    #         "title": request.data.get('title'),
-    #         "resume": request.FILES.get(),
-    #         }
-    #     _serializer = self.serializer_class(data=data)
-    #     if _serializer.is_valid():
-    #         _serializer.save()
-    #         return Response(data=_serializer.data, status=status.HTTP_201_CREATED)  # NOQA
-    #     else:
-    #         return Response(data=_serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # NOQA
-    # if request.session['user_type'] == 'student':
-    #     eml = request.session['email']
-    #     if request.method == "POST":
-    #         # instance = Student.objects.all().filter(email=eml).update(resume=request.FILES["resume"])
-    #         # instance.save()
-    #         # print(request.FILES)
-    #         # print("jijqeifhewoifh")
-    #         # print(request.data)
-    #         # print("hiii")
-            
-    #         # print("hemlo")
-    #         Student.objects.all().filter(email=eml).update(resume=request.FILES)
-    #         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
-    #     else:
-    #         return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
-    # else:
-    #     return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
-
-
+# @api_view(["POST"])
+# def upload_resume(request):
+#     eml = request.session['email']
+#     stud = Student.objects.all().filter(email=eml)
+#     stud.resume = request.data.get('resume')
+   
     
 #job status by company
 @api_view(["POST"])
@@ -462,4 +441,28 @@ def company_list(request):
     batch_json = json.dumps(listbatch, indent = 4) 
     return Response({'cid': batch_json}, status=status.HTTP_200_OK)
 
-# @api_view
+
+# top 3 company
+@api_view(["GET"])
+def top3(request):    
+    top3=Company.objects.raw("SELECT * FROM users_company order by salarypackage limit 3")
+    top3_json = serializers.serialize('json', top3)
+    return Response({'top3': top3_json}, status=status.HTTP_200_OK)
+
+#highest package given by the company to a student
+@api_view(["GET"])
+def eligible(request):
+    eml = request.session['email']
+    stud = Student.objects.all().filter(email=eml)
+    rn = stud[0].roll_no
+    jj = Applied.objects.all().filter(roll_no=rn, status= "placed")
+    print(jj.values()[0])
+    maxctc = 0
+    for jb in jj.values():
+        print(jb['jid_id'])
+        ctcl=Job.objects.all().filter(jid=jb['jid_id'])
+        print(ctcl)
+        maxctc = max(maxctc, ctcl.first().ctc)
+    
+    return Response({'maxctc': maxctc}, status=status.HTTP_200_OK)
+    
