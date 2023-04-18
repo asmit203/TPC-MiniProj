@@ -441,3 +441,20 @@ def company_list(request):
     print(listbatch)
     batch_json = json.dumps(listbatch, indent = 4) 
     return Response({'cid': batch_json}, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def cpi_cal(request):
+    eml = request.session['email']
+    user = request.session['user_type']
+    if user == 'student':
+        stud = Student.objects.all().filter(email=eml)
+        stud = stud.first()
+        batch = stud.batch
+        credits = Credits.objects.all().filter(batch=batch)
+        cred = credits.first().credits5
+        print(cred)
+        cpi = 0
+        sumCred = int(credits.first().credits1) + int(credits.first().credits2) + int(credits.first().credits3) +int(credits.first().credits4) + int(credits.first().credits5) +int(credits.first().credits6) +int(credits.first().credits7) +int(credits.first().credits8) 
+        cpi = int(credits.first().credits1)*int(stud.msem1) + int(credits.first().credits2)*int(stud.msem2) + int(credits.first().credits3)*int(stud.msem3) +int(credits.first().credits4)*int(stud.msem4) + int(credits.first().credits5)*int(stud.msem5) +int(credits.first().credits6)*int(stud.msem6) +int(credits.first().credits7)*int(stud.msem7) +int(credits.first().credits8)*int(stud.msem8) 
+        cpi = cpi/sumCred
+        return Response({'cpi': str(cpi)}, status=status.HTTP_200_OK)
