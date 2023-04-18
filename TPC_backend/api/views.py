@@ -463,6 +463,6 @@ def eligible(request):
         ctcl=Job.objects.all().filter(jid=jb['jid_id'])
         print(ctcl)
         maxctc = max(maxctc, ctcl.first().ctc)
-    
+    # job=Job.objects.raw("SELECT * FROM jobs_job")
     return Response({'maxctc': maxctc}, status=status.HTTP_200_OK)
     
