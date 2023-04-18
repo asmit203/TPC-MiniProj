@@ -218,11 +218,30 @@ def add_job(request):
         return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not add job'}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['POST'])
 def update_profile(request):
+    
     if(request.session.get('email')):
         usertype = request.session['user_type']
         email = request.session['email']
+        def cpi_cal():
+            eml = request.session['email']
+            user = request.session['user_type']
+            if user == 'student' or user == 'alumni':
+                stud = Student.objects.all().filter(email=eml)
+                stud = stud.first()
+                batch = stud.batch
+                credits = Credits.objects.all().filter(batch=batch)
+                cred = credits.first().credits5
+                print(cred)
+                cpi = 0
+                sumCred = int(credits.first().credits1) + int(credits.first().credits2) + int(credits.first().credits3) +int(credits.first().credits4) + int(credits.first().credits5) +int(credits.first().credits6) +int(credits.first().credits7) +int(credits.first().credits8) 
+                cpi = int(credits.first().credits1)*int(stud.msem1) + int(credits.first().credits2)*int(stud.msem2) + int(credits.first().credits3)*int(stud.msem3) +int(credits.first().credits4)*int(stud.msem4) + int(credits.first().credits5)*int(stud.msem5) +int(credits.first().credits6)*int(stud.msem6) +int(credits.first().credits7)*int(stud.msem7) +int(credits.first().credits8)*int(stud.msem8) 
+                cpi = cpi/sumCred
+                return str(cpi)
+            else:
+                return str(0)
         if(usertype == 'student'):
             with connection.cursor() as cursor:
                     cursor.execute("UPDATE users_student SET batch_id = %s WHERE email = %s" ,[str(request.data["batch"]),request.data['email']])
@@ -231,7 +250,7 @@ def update_profile(request):
             stud.email=request.data['email']
             stud.password=request.data['password']
             stud.roll_no=request.data['roll_no']
-            stud.cgpa=request.data['CGPA']
+            stud.cgpa=cpi_cal()
             stud.areaofInterest=request.data['areaofinterest']
             stud.m10=request.data['m10']
             stud.m11=request.data['m11']
@@ -289,6 +308,7 @@ def update_profile(request):
             comp.save()
             return Response({'message': 'Success'}, status=status.HTTP_200_OK)
     return Response({'message': 'Error! Could not update profile'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def delete_job(request):
@@ -442,21 +462,4 @@ def company_list(request):
     batch_json = json.dumps(listbatch, indent = 4) 
     return Response({'cid': batch_json}, status=status.HTTP_200_OK)
 
-@api_view(["GET"])
-def cpi_cal(request):
-    eml = request.session['email']
-    user = request.session['user_type']
-    if user == 'student' or user == 'alumni':
-        stud = Student.objects.all().filter(email=eml)
-        stud = stud.first()
-        batch = stud.batch
-        credits = Credits.objects.all().filter(batch=batch)
-        cred = credits.first().credits5
-        print(cred)
-        cpi = 0
-        sumCred = int(credits.first().credits1) + int(credits.first().credits2) + int(credits.first().credits3) +int(credits.first().credits4) + int(credits.first().credits5) +int(credits.first().credits6) +int(credits.first().credits7) +int(credits.first().credits8) 
-        cpi = int(credits.first().credits1)*int(stud.msem1) + int(credits.first().credits2)*int(stud.msem2) + int(credits.first().credits3)*int(stud.msem3) +int(credits.first().credits4)*int(stud.msem4) + int(credits.first().credits5)*int(stud.msem5) +int(credits.first().credits6)*int(stud.msem6) +int(credits.first().credits7)*int(stud.msem7) +int(credits.first().credits8)*int(stud.msem8) 
-        cpi = cpi/sumCred
-        return Response({'cpi': str(cpi)}, status=status.HTTP_200_OK)
-    else:
-        return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
+# @api_view

@@ -20,6 +20,6 @@ urlpatterns = [
     path('uploadresume/', views.upload_resume),
     path('batchlist/', views.batch_list),
     path('cidlist/', views.company_list),   
-    path('getcpi/', views.cpi_cal),   
+    # path('getcpi/', views.cpi_cal),   
     re_path(r'^viewpdf/$', views.view_pdf),
 ]
