@@ -446,7 +446,7 @@ def company_list(request):
 def cpi_cal(request):
     eml = request.session['email']
     user = request.session['user_type']
-    if user == 'student':
+    if user == 'student' or user == 'alumni':
         stud = Student.objects.all().filter(email=eml)
         stud = stud.first()
         batch = stud.batch
@@ -458,3 +458,5 @@ def cpi_cal(request):
         cpi = int(credits.first().credits1)*int(stud.msem1) + int(credits.first().credits2)*int(stud.msem2) + int(credits.first().credits3)*int(stud.msem3) +int(credits.first().credits4)*int(stud.msem4) + int(credits.first().credits5)*int(stud.msem5) +int(credits.first().credits6)*int(stud.msem6) +int(credits.first().credits7)*int(stud.msem7) +int(credits.first().credits8)*int(stud.msem8) 
         cpi = cpi/sumCred
         return Response({'cpi': str(cpi)}, status=status.HTTP_200_OK)
+    else:
+        return Response({'message': 'Error! Permission Denied !!'}, status=status.HTTP_400_BAD_REQUEST)
