@@ -86,6 +86,9 @@ class Alumni(models.Model):
     msem6 = models.TextField(blank=True, null=True)
     msem7 = models.TextField(blank=True, null=True)
     msem8 = models.TextField(blank=True, null=True)
+    ctc=models.TextField(blank=True, null=True)
+    area=models.TextField(blank=True,null=True)
+    tenure=models.TextField(blank=True, null= True)
     # alumprofilepic = models.ImageField(upload_to='alumprofile_pics/', blank=True, null=True)
     alumprofilepic = models.TextField(blank=True, null=True)
     def __str__(self):
